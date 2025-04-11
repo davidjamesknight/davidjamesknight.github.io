@@ -1,0 +1,274 @@
+/* Root Variables ------------------------------------------------------ */
+:root {
+  --black: #000000;
+  --white: #fafafa;
+  --grey-200: #eeeeee;
+  --grey-300: #e0e0e0;
+  --grey-400: #bdbdbd;
+  --grey-800: #424242;
+  --grey-900: #212121;
+}
+
+/* Typography ---------------------------------------------------------- */
+@font-face {
+  font-family: "Cinzel";
+  src: url("../fonts/Cinzel/Cinzel-Regular.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "CrimsonText";
+  src: url("../fonts/CrimsonText/CrimsonText-Regular.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "CrimsonText-SemiBold";
+  src: url("../fonts/CrimsonText/CrimsonText-SemiBold.ttf") format("truetype");
+}
+
+/* Base Styles --------------------------------------------------------- */
+html,
+body {
+  height: 100%;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  font-size: 18px;
+  font-family: "CrimsonText", "Times New Roman", serif;
+  color: var(--white);
+  background-color: var(--grey-800);
+  line-height: 1.6;
+  font-size: 1rem; /* 16px base */
+}
+
+/* Header Styles ------------------------------------------------------- */
+header {
+  background-color: var(--black);
+  color: var(--white);
+  padding: 0 0 2rem;
+  text-align: center;
+}
+
+#nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  font-size: 18px;
+}
+
+.nav-left {
+  /* flex-grow: 1; */
+}
+
+.nav-right a {
+  text-decoration: none;
+  font-size: 20px;
+  margin-left: 10px;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.nav-right a:hover {
+  opacity: 0.7;
+}
+
+#phone {
+  font-weight: bold;
+}
+
+/* Logo Styles --------------------------------------------------------- */
+#logo {
+  font-family: "Cinzel", serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1; /* Prevents extra spacing issues */
+}
+
+.letter {
+  color: var(--grey-800);
+  display: inline-block;
+  font-size: 5rem; /* Base size */
+}
+
+#j {
+  transform: scaleY(1.25); /* Stretch the J taller */
+}
+
+.full-name {
+  font-size: 1.5rem; /* Adjust as needed */
+  font-weight: normal;
+  position: absolute; /* Centers over DJK */
+  text-align: center;
+  text-shadow: 0px 0px 1rem var(--black); /* Subtle outline */
+}
+
+/* Typography Hierarchy ------------------------------------------------ */
+h1 {
+  font-size: 2.5rem; /* 40px */
+  margin: 0;
+}
+
+h2 {
+  font-family: "CrimsonText-SemiBold", "Times New Roman", serif;
+  font-size: 2rem; /* 32px */
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+h3 {
+  font-family: "CrimsonText-SemiBold", "Times New Roman", serif;
+  font-size: 1.75rem; /* 28px */
+  margin: 0 1rem 1rem;
+}
+
+h4 {
+  font-size: 1.5rem; /* 24px */
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+/* Main Content Area --------------------------------------------------- */
+#main-container {
+  background-image: url("../images/chessboard.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  filter: grayscale(100%);
+  flex: 1; /* Pushes the footer to the bottom if there's not enough content */
+  position: relative; /* Ensures the overlay is positioned correctly */
+  z-index: 0; /* Keeps it behind content */
+}
+
+/* Dark Overlay for Background Image --------------------------------- */
+#main-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  z-index: -1; /* Keeps it behind content */
+}
+
+/* Call to Action Section --------------------------------------------- */
+#main {
+  padding: 2rem 1rem;
+  text-align: center;
+  text-shadow: 0px 0px 2px var(--black);
+}
+
+#main p {
+  font-size: 1.125rem;
+  margin-bottom: 1rem;
+  text-align: left;
+}
+
+/* Footer Styles ------------------------------------------------------- */
+footer {
+  background-color: var(--grey-900);
+  color: var(--white);
+  text-align: center;
+  padding: 2rem 0 0 0;
+  flex-shrink: 0; /* Prevent footer from shrinking */
+  margin-top: auto; /* Pushes footer to the bottom if content is small */
+}
+
+#response-message {
+  height: 1rem;
+  margin-top: 1rem;
+}
+
+#site-credits {
+  background-color: var(--black);
+  color: var(--grey-800);
+  font-size: 0.75rem;
+  padding: 0.75rem;
+}
+
+/* Contact Form Styles ------------------------------------------------ */
+
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  /* margin: 0 auto; */
+}
+
+form input,
+form textarea {
+  width: 100%;
+  border: 1px solid var(--grey-400);
+  border-radius: 0.333rem;
+  box-sizing: border-box;
+  font-family: inherit;
+  font-size: 1rem;
+  padding: 0.3125rem;
+}
+
+form textarea {
+  resize: vertical;
+  min-height: 5rem;
+}
+
+form button {
+  background-color: var(--grey-800);
+  color: var(--white);
+  border: none;
+  padding: 0.75rem 1.5rem;
+  font-family: inherit;
+  font-size: 1rem;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+form button:active,
+form button:hover {
+  background-color: var(--black);
+}
+
+#response-message {
+  margin: 1rem 0;
+}
+
+/* Profile Picture ---------------------------------------------------- */
+.profile-picture-container {
+  text-align: center;
+  margin: 1rem 0;
+}
+
+.profile-picture {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--white);
+}
+
+/* Responsiveness ----------------------------------------------------- */
+@media (max-width: 768px) {
+  #logo {
+    font-size: 3rem;
+  }
+
+  .letter {
+    font-size: 4rem; /* Adjust logo size on small screens */
+  }
+
+  .full-name {
+    font-size: 1.2rem;
+  }
+
+  #main h2 {
+    font-size: 1.5rem;
+  }
+
+  form input,
+  form textarea,
+  form button {
+    width: 90%; /* Ensure form elements are responsive */
+  }
+}
