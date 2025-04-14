@@ -44,7 +44,7 @@ body {
 header {
   background-color: var(--black);
   color: var(--white);
-  padding: 0 0 2rem;
+  padding: 2rem 0;
   text-align: center;
 }
 
@@ -52,7 +52,7 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 20px;
+  padding: 10px 20px 0px;
   font-size: 18px;
 }
 
