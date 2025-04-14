@@ -2,11 +2,11 @@
 :root {
   --black: #000000;
   --white: #fafafa;
-  --grey-200: #eeeeee;
-  --grey-300: #e0e0e0;
-  --grey-400: #bdbdbd;
-  --grey-800: #424242;
-  --grey-900: #212121;
+  --grey-200: #cfd8dc; /* Blue Grey 100 */
+  --grey-300: #b0bec5; /* Blue Grey 200 */
+  --grey-400: #90a4ae; /* Blue Grey 300 */
+  --grey-800: #37474f; /* Blue Grey 800 */
+  --grey-900: #263238; /* Blue Grey 900 */
 }
 
 /* Typography ---------------------------------------------------------- */
@@ -48,7 +48,7 @@ header {
   text-align: center;
 }
 
-#nav {
+/* #nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -57,7 +57,7 @@ header {
 }
 
 .nav-left {
-  /* flex-grow: 1; */
+  flex-grow: 1;
 }
 
 .nav-right a {
@@ -73,7 +73,7 @@ header {
 
 #phone {
   font-weight: bold;
-}
+} */
 
 /* Logo Styles --------------------------------------------------------- */
 #logo {
