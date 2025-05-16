@@ -38,7 +38,7 @@ body {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  background-attachment: fixed; /* Background doesn't scroll */
+  background-attachment: fixed;
   color: var(--white);
   display: flex;
   flex-direction: column;
@@ -57,19 +57,19 @@ h4 {
   font-family: var(--font-heading);
 }
 h1 {
-  font-size: 2.5rem; /* 40px */
+  font-size: 2.5rem;
 }
 
 h2 {
-  font-size: 2rem; /* 32px */
+  font-size: 2rem;
 }
 
 h3 {
-  font-size: 1.75rem; /* 28px */
+  font-size: 1.75rem;
 }
 
 h4 {
-  font-size: 1.5rem; /* 24px */
+  font-size: 1.5rem;
   font-style: italic;
 }
 
@@ -86,25 +86,30 @@ header {
   display: flex;
   align-items: center;
   justify-content: center;
-  /* line-height: 1; Prevents extra spacing issues */
+  position: relative; /* Required for .full-name absolute positioning */
 }
 
 .letter {
   color: var(--grey-800);
   display: inline-block;
-  font-size: 5rem; /* Base size */
+  font-size: 5rem;
 }
 
 #j {
-  transform: scaleY(1.25); /* Stretch the J taller */
+  transform: scaleY(1.25);
 }
 
 .full-name {
   font-size: 1.5rem;
   font-weight: normal;
-  position: absolute; /* Centers over DJK */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   text-align: center;
-  text-shadow: 0px 0px 1rem var(--black); /* Subtle outline */
+  text-shadow: 0px 0px 1rem var(--black);
+  white-space: nowrap;
+  z-index: 1;
 }
 
 /* Call to Action Section --------------------------------------------- */
@@ -124,32 +129,33 @@ main p {
   text-align: left;
 }
 
+/* Button Styles ------------------------------------------------------ */
 button {
   align-items: center;
   background-color: var(--grey-900);
   border: none;
   border-radius: 0.5rem;
-  box-shadow: none; /* Removes bevel effect */
+  box-shadow: none;
   color: white;
-  cursor: pointer; /* Pointer cursor on hover */
+  cursor: pointer;
   display: inline-flex;
   font-family: var(--font-text);
   font-size: 1rem;
   gap: 0.25rem;
-  outline: none; /* Removes default focus outline */
+  outline: none;
   padding: 0.75rem 1rem;
   transition: transform 0.1s ease;
 }
 
 button:active {
-  transform: scale(0.98); /* Slight button compression */
+  transform: scale(0.98);
 }
 
 button img {
   height: 1em;
-  width: auto; /* Auto width to preserve aspect ratio */
+  width: auto;
   display: inline-block;
-  margin-top: 0.2rem; /* Align bottom edge with text baseline */
+  margin-top: 0.2rem;
 }
 
 /* Footer Styles ------------------------------------------------------- */
@@ -171,7 +177,7 @@ footer {
   }
 
   .letter {
-    font-size: 4rem; /* Adjust logo size on small screens */
+    font-size: 4rem;
   }
 
   .full-name {
@@ -179,6 +185,6 @@ footer {
   }
 
   main h2 {
-    font-size: 1.5rem; /* CTA */
+    font-size: 1.5rem;
   }
 }
