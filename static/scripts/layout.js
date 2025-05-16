@@ -1,7 +1,8 @@
 // Dynamic width sizing ------------------------------
 function setOptimalColumnWidth(charPerLine = 65) {
-  const mainElement = document.getElementById("main");
-  const formContainer = document.getElementById("form-container");
+  const optimizedElements = document.getElementsByClassName("optimal-width");
+  const mainElement = document.querySelector("main");
+  // const formContainer = document.getElementById("form-container");
   // Get computed styles of the main element
   const mainStyles = getComputedStyle(mainElement);
   const fontFamily = mainStyles.fontFamily;
@@ -28,12 +29,22 @@ function setOptimalColumnWidth(charPerLine = 65) {
   // Calculate optimal column width
   const maxWidth = Math.round(avgCharWidth * charPerLine);
 
-  // Apply max-width to <main> and <form>
-  mainElement.style.maxWidth = `${maxWidth}px`;
-  mainElement.style.margin = "0 auto"; // Center content
-  formContainer.style.maxWidth = `${maxWidth}px`;
-  formContainer.style.margin = "0 auto"; // Center content
+  [...optimizedElements].forEach((element) => {
+    element.style.maxWidth = `${maxWidth}px`;
+    element.style.margin = "0 auto";
+  });
+}
+
+function centerCallToAction() {
+  const logoHeight = document
+    .getElementById("logo")
+    .getBoundingClientRect().height;
+  const main = document.getElementById("main");
+  main.style.marginTop = `-${logoHeight}px`;
 }
 
 // Run function on page load
-document.addEventListener("DOMContentLoaded", () => setOptimalColumnWidth());
+document.addEventListener("DOMContentLoaded", () => {
+  setOptimalColumnWidth();
+  centerCallToAction();
+});

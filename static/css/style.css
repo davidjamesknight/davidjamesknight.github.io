@@ -1,5 +1,7 @@
 /* Root Variables ------------------------------------------------------ */
 :root {
+  --font-heading: "CrimsonText-SemiBold", "Times New Roman", serif;
+  --font-text: "CrimsonText", "Times New Roman", serif;
   --black: #000000;
   --white: #fafafa;
   --grey-200: #cfd8dc; /* Blue Grey 100 */
@@ -33,47 +35,32 @@ body {
   display: flex;
   flex-direction: column;
   font-size: 18px;
-  font-family: "CrimsonText", "Times New Roman", serif;
+  font-family: var(--font-text);
   color: var(--white);
-  background-color: var(--grey-800);
+  background-color: var(--black);
   line-height: 1.6;
   font-size: 1rem; /* 16px base */
 }
 
+body {
+  background-image: url("../images/chessboard.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  position: relative; /* Ensures the overlay is positioned correctly */
+  z-index: 0; /* Keeps it behind content */
+}
+
 /* Header Styles ------------------------------------------------------- */
 header {
-  background-color: var(--black);
   color: var(--white);
   padding: 2rem 0;
   text-align: center;
 }
-
-/* #nav {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 20px 0px;
-  font-size: 18px;
-}
-
-.nav-left {
-  flex-grow: 1;
-}
-
-.nav-right a {
-  text-decoration: none;
-  font-size: 20px;
-  margin-left: 10px;
-  transition: opacity 0.3s ease-in-out;
-}
-
-.nav-right a:hover {
-  opacity: 0.7;
-}
-
-#phone {
-  font-weight: bold;
-} */
 
 /* Logo Styles --------------------------------------------------------- */
 #logo {
@@ -103,76 +90,85 @@ header {
 }
 
 /* Typography Hierarchy ------------------------------------------------ */
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-heading);
+  /* text-align: center; */
+}
 h1 {
   font-size: 2.5rem; /* 40px */
-  margin: 0;
 }
 
 h2 {
-  font-family: "CrimsonText-SemiBold", "Times New Roman", serif;
   font-size: 2rem; /* 32px */
-  margin-top: 2rem;
-  margin-bottom: 1rem;
 }
 
 h3 {
-  font-family: "CrimsonText-SemiBold", "Times New Roman", serif;
   font-size: 1.75rem; /* 28px */
-  margin: 0 1rem 1rem;
 }
 
 h4 {
   font-size: 1.5rem; /* 24px */
-  margin-top: 2rem;
-  margin-bottom: 1rem;
-}
-
-/* Main Content Area --------------------------------------------------- */
-#main-container {
-  background-image: url("../images/chessboard.jpg");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  filter: grayscale(100%);
-  flex: 1; /* Pushes the footer to the bottom if there's not enough content */
-  position: relative; /* Ensures the overlay is positioned correctly */
-  z-index: 0; /* Keeps it behind content */
-}
-
-/* Dark Overlay for Background Image --------------------------------- */
-#main-container::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.8);
-  z-index: -1; /* Keeps it behind content */
+  font-style: italic;
 }
 
 /* Call to Action Section --------------------------------------------- */
-#main {
+main {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   padding: 2rem 1rem;
-  text-align: center;
   text-shadow: 0px 0px 2px var(--black);
+  height: auto;
 }
 
-#main p {
+main p {
   font-size: 1.125rem;
   margin-bottom: 1rem;
   text-align: left;
 }
 
+button {
+  align-items: center;
+  background-color: var(--grey-900);
+  border: none;
+  border-radius: 0.5rem;
+  box-shadow: none; /* Removes shadow/bevel effect */
+  color: white; /* Text color */
+  cursor: pointer; /* Pointer cursor on hover */
+  display: inline-flex; /* Use flexbox inline */
+  font-family: var(--font-text);
+  font-size: 1rem; /* Readable font size */
+  gap: 0.25rem;
+  outline: none; /* Removes default focus outline */
+  padding: 0.75rem 1rem;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+button:active {
+  transform: scale(0.98); /* Slight button compression */
+}
+
+button img {
+  height: 1em; /* Match icon height to text line height */
+  width: auto; /* Auto width to preserve aspect ratio */
+  display: inline-block;
+  margin-top: 0.2rem;
+}
+
 /* Footer Styles ------------------------------------------------------- */
 footer {
-  background-color: var(--grey-900);
+  /* margin-top: 100vh; */
+  /* display: none; */
+  /* background-color: var(--grey-900); */
   color: var(--white);
   text-align: center;
-  padding: 2rem 0 0 0;
-  flex-shrink: 0; /* Prevent footer from shrinking */
-  margin-top: auto; /* Pushes footer to the bottom if content is small */
+  /* padding: 2rem 0 0 0; */
+  /* flex-shrink: 0; Prevent footer from shrinking */
+  margin-top: auto;
 }
 
 #response-message {
@@ -181,7 +177,7 @@ footer {
 }
 
 #site-credits {
-  background-color: var(--black);
+  /* background-color: var(--black); */
   color: var(--grey-800);
   font-size: 0.75rem;
   padding: 0.75rem;
@@ -194,7 +190,7 @@ form {
   flex-direction: column;
   align-items: center;
   gap: 1rem;
-  /* margin: 0 auto; */
+  margin-top: 1rem;
 }
 
 form input,
@@ -260,10 +256,6 @@ form button:hover {
 
   .full-name {
     font-size: 1.2rem;
-  }
-
-  #main h2 {
-    font-size: 1.5rem;
   }
 
   form input,
