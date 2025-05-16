@@ -131,11 +131,6 @@ main p {
   text-align: left;
 }
 
-.heading-line {
-  display: inline-block;
-  white-space: nowrap; /* Prevent individual span from breaking mid-phrase */
-}
-
 button {
   align-items: center;
   background-color: var(--grey-900);
