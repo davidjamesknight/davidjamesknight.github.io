@@ -8,16 +8,6 @@ document.getElementById("mailto").addEventListener("click", () => {
     "bWFpbHRvOmxhd0BkYXZpZGphbWVza25pZ2h0LmNvbT9zdWJqZWN0PUFwcGVsbGF0ZSUyMFN1cHBvcnQlMjBJbnF1aXJ5"
   );
 });
-// document
-//   .getElementById("writing-sample")
-//   .addEventListener("click", function () {
-//     const link = document.createElement("a");
-//     link.href = "./static/docs/WritingSample.pdf";
-//     link.download = "WritingSample.pdf";
-//     document.body.appendChild(link);
-//     link.click();
-//     document.body.removeChild(link);
-//   });
 document
   .getElementById("writing-sample")
   .addEventListener("click", function () {
