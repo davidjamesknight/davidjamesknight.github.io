@@ -177,12 +177,6 @@ button img {
   color: var(--grey-500);
 }
 
-#writing-sample:hover {
-  background-color: var(--grey-900);
-  border-color: var(--grey-900);
-  color: var(--white);
-}
-
 /* Footer Styles ------------------------------------------------------- */
 footer {
   text-align: center;
