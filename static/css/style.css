@@ -130,13 +130,20 @@ main p {
 }
 
 /* Button Styles ------------------------------------------------------ */
+
+#button-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
 button {
   align-items: center;
   background-color: var(--grey-900);
   border: none;
   border-radius: 0.5rem;
   box-shadow: none;
-  color: white;
+  color: var(--white);
   cursor: pointer;
   display: inline-flex;
   font-family: var(--font-text);
@@ -156,6 +163,19 @@ button img {
   width: auto;
   display: inline-block;
   margin-top: 0.2rem;
+}
+
+#writing-sample {
+  background-color: var(--black);
+  border-color: var(--grey-900);
+  border-style: solid;
+  border-width: 2px;
+  color: var(--grey-800);
+}
+
+#writing-sample:hover {
+  background-color: var(--grey-900);
+  color: var(--white);
 }
 
 /* Footer Styles ------------------------------------------------------- */
