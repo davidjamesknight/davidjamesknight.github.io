@@ -30,7 +30,7 @@ body {
   justify-content: center;
   align-items: center;
   font-weight: bold;
-  color: #ffffff;
+  color: #00e676;
   font-size: 10vh; /* scales with viewport height */
   border-radius: 0px;
   cursor: pointer;
@@ -38,14 +38,9 @@ body {
   text-shadow: 0 0 5vh #757575;
 }
 
-.square.green {
-  outline: 3px solid #00e676;
-  box-shadow: 0 0 1vh #00e676;
-}
-
-.square.red {
-  outline: 3px solid #ff1744;
-  box-shadow: 0 0 1vh #ff1744;
+/* New CSS for unmovable pieces */
+.square.unmovable {
+  color: #ffffff;
 }
 
 #overlay {

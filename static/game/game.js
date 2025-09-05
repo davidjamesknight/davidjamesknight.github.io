@@ -59,10 +59,7 @@ function setupBoard() {
 // initialize board
 let board = setupBoard();
 let initialBoard = board.map((row) => [...row]); // deep copy for Try Again
-let currentDraggedPiece = null;
-let currentDraggedFromRow = null;
-let currentDraggedFromCol = null;
-let touchedPiece = null;
+let selectedPiece = null;
 
 function renderBoard(board) {
   const boardDiv = document.getElementById("board");
@@ -78,93 +75,23 @@ function renderBoard(board) {
     square.textContent = piece ? pieceSymbols[piece] : "";
 
     if (piece) {
-      square.draggable = true;
+      const valid = canMove(piece, row, col, emptyRow, emptyCol);
+      if (!valid) {
+        square.classList.add("unmovable");
+      }
+    }
 
-      // Highlight when mouse is pressed
-      square.addEventListener("mousedown", () => {
-        clearHighlights();
-        const valid = canMove(piece, row, col, emptyRow, emptyCol);
-        const emptyIndex = emptyRow * 2 + emptyCol;
-        const emptySquare = boardDiv.children[emptyIndex];
-        emptySquare.classList.add(valid ? "green" : "red");
-      });
-
-      // Start drag
-      square.addEventListener("dragstart", (e) => {
-        const valid = canMove(piece, row, col, emptyRow, emptyCol);
-        if (!valid) {
-          e.preventDefault();
-        } else {
-          e.dataTransfer.setData("text/plain", `${row},${col}`);
-        }
-      });
-
-      // Clear highlight when mouse released
-      square.addEventListener("mouseup", () => {
-        clearHighlights();
-      });
-
-      square.addEventListener("dragend", () => {
-        clearHighlights();
-      });
-
-      // Touch event listeners for mobile devices
-      square.addEventListener("touchstart", (e) => {
-        e.preventDefault(); // Prevent default mobile behaviors like scrolling
-        clearHighlights();
+    square.addEventListener("click", () => {
+      if (piece) {
+        // If a piece is clicked
         const valid = canMove(piece, row, col, emptyRow, emptyCol);
         if (valid) {
-          const emptyIndex = emptyRow * 2 + emptyCol;
-          const emptySquare = boardDiv.children[emptyIndex];
-          emptySquare.classList.add("green");
-          touchedPiece = { piece, row, col };
-        } else {
-          const emptyIndex = emptyRow * 2 + emptyCol;
-          const emptySquare = boardDiv.children[emptyIndex];
-          emptySquare.classList.add("red");
-        }
-      });
-
-      square.addEventListener("touchend", () => {
-        clearHighlights();
-        touchedPiece = null;
-      });
-    }
-
-    if (!piece) {
-      square.addEventListener("dragover", (e) => e.preventDefault());
-      square.addEventListener("drop", (e) => {
-        e.preventDefault();
-        const [fromRow, fromCol] = e.dataTransfer
-          .getData("text/plain")
-          .split(",")
-          .map(Number);
-        const movingPiece = board[fromRow][fromCol];
-        if (canMove(movingPiece, fromRow, fromCol, row, col)) {
-          board[row][col] = movingPiece;
-          board[fromRow][fromCol] = null;
+          board[emptyRow][emptyCol] = piece;
+          board[row][col] = null;
           renderBoard(board);
         }
-      });
-
-      // Touch event listener for drop
-      square.addEventListener("touchend", (e) => {
-        e.preventDefault();
-        if (touchedPiece) {
-          const {
-            piece: movingPiece,
-            row: fromRow,
-            col: fromCol,
-          } = touchedPiece;
-          if (canMove(movingPiece, fromRow, fromCol, row, col)) {
-            board[row][col] = movingPiece;
-            board[fromRow][fromCol] = null;
-            renderBoard(board);
-            touchedPiece = null; // Clear the tracked piece after a successful move
-          }
-        }
-      });
-    }
+      }
+    });
 
     boardDiv.appendChild(square);
   });
@@ -173,9 +100,8 @@ function renderBoard(board) {
 }
 
 function clearHighlights() {
-  document.querySelectorAll(".square").forEach((sq) => {
-    sq.classList.remove("red", "green");
-  });
+  // This function is no longer needed in this version.
+  // We'll keep it as a placeholder to avoid breaking other code.
 }
 
 function findEmpty() {
@@ -190,22 +116,64 @@ function canMove(piece, r, c, er, ec) {
   const dr = er - r;
   const dc = ec - c;
 
+  // First, check if the move is a valid type for the piece.
+  let isValidMoveType = false;
   switch (piece) {
     case "king":
-      return Math.abs(dr) <= 1 && Math.abs(dc) <= 1;
+      isValidMoveType = Math.abs(dr) <= 1 && Math.abs(dc) <= 1;
+      break;
     case "queen":
-      return dr === 0 || dc === 0 || Math.abs(dr) === Math.abs(dc);
+      isValidMoveType = dr === 0 || dc === 0 || Math.abs(dr) === Math.abs(dc);
+      break;
     case "rook":
-      return dr === 0 || dc === 0;
+      isValidMoveType = dr === 0 || dc === 0;
+      break;
     case "bishop":
-      return Math.abs(dr) === Math.abs(dc);
+      isValidMoveType = Math.abs(dr) === Math.abs(dc);
+      break;
     case "knight":
-      return (
+      isValidMoveType =
         (Math.abs(dr) === 2 && Math.abs(dc) === 1) ||
-        (Math.abs(dr) === 1 && Math.abs(dc) === 2)
-      );
+        (Math.abs(dr) === 1 && Math.abs(dc) === 2);
+      break;
   }
-  return false;
+
+  if (!isValidMoveType) {
+    return false;
+  }
+
+  // Knights and Kings don't need path checking.
+  if (piece === "knight" || piece === "king") {
+    return true;
+  }
+
+  // Now, check for path blocking for Rook, Bishop, and Queen.
+  if (dr === 0) {
+    // Horizontal movement
+    const step = dc > 0 ? 1 : -1;
+    for (let i = c + step; i !== ec; i += step) {
+      if (board[r][i]) return false;
+    }
+  } else if (dc === 0) {
+    // Vertical movement
+    const step = dr > 0 ? 1 : -1;
+    for (let i = r + step; i !== er; i += step) {
+      if (board[i][c]) return false;
+    }
+  } else {
+    // Diagonal movement
+    const rStep = dr > 0 ? 1 : -1;
+    const cStep = dc > 0 ? 1 : -1;
+    let currR = r + rStep;
+    let currC = c + cStep;
+    while (currR !== er && currC !== ec) {
+      if (board[currR][currC]) return false;
+      currR += rStep;
+      currC += cStep;
+    }
+  }
+
+  return true;
 }
 
 function showOverlay(message) {
