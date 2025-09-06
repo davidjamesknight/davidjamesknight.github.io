@@ -60,6 +60,7 @@ function setupBoard() {
 let board = setupBoard();
 let initialBoard = board.map((row) => [...row]); // deep copy for Try Again
 let selectedPiece = null;
+let highlightsEnabled = false; // New state variable
 
 function renderBoard(board) {
   const boardDiv = document.getElementById("board");
@@ -74,9 +75,17 @@ function renderBoard(board) {
     square.className = "square";
     square.textContent = piece ? pieceSymbols[piece] : "";
 
+    if (piece === "king") {
+      square.classList.add("king");
+    }
+
     if (piece) {
       const valid = canMove(piece, row, col, emptyRow, emptyCol);
-      if (!valid) {
+      if (valid) {
+        if (highlightsEnabled) {
+          square.classList.add("highlight");
+        }
+      } else {
         square.classList.add("unmovable");
       }
     }
@@ -97,11 +106,6 @@ function renderBoard(board) {
   });
 
   checkWin();
-}
-
-function clearHighlights() {
-  // This function is no longer needed in this version.
-  // We'll keep it as a placeholder to avoid breaking other code.
 }
 
 function findEmpty() {
@@ -211,6 +215,11 @@ document.getElementById("new-game").addEventListener("click", () => {
   hideOverlay();
   board = setupBoard(); // generate new board
   initialBoard = board.map((row) => [...row]); // save new initial layout
+  renderBoard(board);
+});
+
+document.getElementById("toggle-highlights").addEventListener("click", () => {
+  highlightsEnabled = !highlightsEnabled;
   renderBoard(board);
 });
 

@@ -1,35 +1,32 @@
 :root {
   /* Material Design Color Palette Variables */
-  --md-grey-900: #212121;
-  --md-grey-600: #757575;
-  --md-green-A700: #00e676;
-  --md-white: #ffffff;
-  --md-black: #000000;
-
-  /* Game-specific variables for clarity */
-  --color-background: var(--md-black);
-  --color-board-background: var(--md-black);
-  --color-square-background: var(--md-grey-900);
-  --color-movable-piece: var(--md-green-A700);
-  --color-unmovable-piece: var(--md-white);
-  --color-overlay-background: rgba(0, 0, 0, 0.75);
-  --color-overlay-content-background: var(--md-grey-900);
-  --color-button: var(--md-green-A700);
-  --color-button-hover: var(--md-green-A700);
-  --color-text-primary: var(--md-white);
-  --color-text-shadow: var(--md-grey-600);
+  --grey-900: #212121;
+  --grey-800: #424242;
+  --grey-700: #616161;
+  --grey-600: #757575;
+  --white: #ffffff;
+  --black: #000000;
+  --teal: #1de9b6;
 }
 
 body {
   font-family: "Arial", sans-serif;
-  background: var(--color-background);
-  color: var(--color-text-primary);
+  background: var(--black);
+  color: var(--white);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   height: 100vh;
   margin: 0;
+}
+
+#game-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
 }
 
 #board {
@@ -46,22 +43,43 @@ body {
 .square {
   width: 100%;
   height: 100%;
-  background: var(--color-square-background);
+  background: var(--grey-900);
   border: none;
   display: flex;
   justify-content: center;
   align-items: center;
   font-weight: bold;
-  color: var(--color-movable-piece);
+  color: var(--white);
   font-size: 10vh;
   border-radius: 0px;
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.3s ease, color 0.5s ease;
-  text-shadow: 0 0 5vh var(--color-text-shadow);
+  transition: transform 0.2s ease, box-shadow 0.3s ease, color 0.5s ease,
+    background 0.3s ease;
+  text-shadow: 0 0 5vh var(--grey-600);
+}
+
+.square.highlight {
+  background: var(--grey-800);
 }
 
 .square.unmovable {
-  color: var(--color-unmovable-piece);
+  background: var(--grey-900);
+  color: var(--white);
+}
+
+#toggle-highlights {
+  padding: 1.5vh 3vw;
+  font-size: 2vh;
+  cursor: pointer;
+  background: var(--teal);
+  border: none;
+  border-radius: 5px;
+  color: var(--black);
+  transition: background 0.2s ease;
+}
+
+#toggle-highlights:hover {
+  background: var(--teal);
 }
 
 #overlay {
@@ -70,7 +88,7 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background: var(--color-overlay-background);
+  background: rgba(0, 0, 0, 0.75);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -78,11 +96,11 @@ body {
 }
 
 #overlay-content {
-  background: var(--color-overlay-content-background);
+  background: var(--grey-900);
   padding: 5vh 8vw;
   border-radius: 10px;
   text-align: center;
-  color: var(--color-text-primary);
+  color: var(--white);
   font-size: 4vh;
 }
 
@@ -91,17 +109,22 @@ body {
   padding: 1.5vh 3vw;
   font-size: 2vh;
   cursor: pointer;
-  background: var(--color-button);
+  background: var(--teal);
   border: none;
   border-radius: 5px;
-  color: var(--color-background);
+  color: var(--black);
   transition: background 0.2s ease;
 }
 
 #overlay button:hover {
-  background: var(--color-button-hover);
+  background: var(--teal);
 }
 
 #overlay.hidden {
   display: none !important;
+}
+
+.square.king {
+  color: var(--teal);
+  text-shadow: 0 0 5vh var(--grey-700);
 }
