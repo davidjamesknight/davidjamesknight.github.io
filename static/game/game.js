@@ -50,8 +50,21 @@ function setupBoard() {
       }
     }
 
-    // check second-to-bottom row (row 6) for two knights
-  } while (board[6].filter((p) => p === "knight").length === 2);
+    // Check for two knights in the second-to-last row (row 6)
+    const twoKnightsInRow6 =
+      board[6].filter((p) => p === "knight").length === 2;
+
+    // Check for a knight in row 6 and a bishop diagonally in row 5
+    const knightAt6_0 = board[6][0] === "knight";
+    const knightAt6_1 = board[6][1] === "knight";
+    const bishopAt5_0 = board[5][0] === "bishop";
+    const bishopAt5_1 = board[5][1] === "bishop";
+
+    const diagonalBishopFromKnight =
+      (knightAt6_0 && bishopAt5_1) || (knightAt6_1 && bishopAt5_0);
+
+    // Keep regenerating the board until both rules are satisfied
+  } while (twoKnightsInRow6 || diagonalBishopFromKnight);
 
   return board;
 }
