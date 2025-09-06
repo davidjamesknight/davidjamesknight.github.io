@@ -28,6 +28,13 @@ function setupBoard() {
   let board;
   let twoKnightsInRow6;
   let diagonalBishopFromKnight;
+  let bannedPlacement1;
+  let bannedPlacement2;
+  let bannedPlacement3;
+  let bannedPlacement4;
+  let bannedPlacement5;
+  let bannedPlacement6;
+
   do {
     // shuffle pieces
     const pieces = [...piecesPool];
@@ -63,8 +70,46 @@ function setupBoard() {
     diagonalBishopFromKnight =
       (knightAt6_0 && bishopAt5_1) || (knightAt6_1 && bishopAt5_0);
 
-    // Keep regenerating the board until both rules are satisfied
-  } while (twoKnightsInRow6 || diagonalBishopFromKnight);
+    bannedPlacement1 =
+      board[6][0] === "knight" &&
+      board[4][1] === "knight" &&
+      board[3][0] === "bishop";
+    bannedPlacement2 =
+      board[6][1] === "knight" &&
+      board[4][0] === "knight" &&
+      board[3][1] === "bishop";
+    bannedPlacement3 =
+      board[6][0] === "knight" &&
+      board[4][1] === "knight" &&
+      board[2][0] === "knight" &&
+      board[1][1] === "bishop";
+    bannedPlacement4 =
+      board[6][1] === "knight" &&
+      board[4][0] === "knight" &&
+      board[2][1] === "knight" &&
+      board[1][0] === "bishop";
+    bannedPlacement5 =
+      board[6][0] === "knight" &&
+      board[4][1] === "knight" &&
+      board[2][0] === "knight" &&
+      board[0][1] === "knight";
+    bannedPlacement6 =
+      board[6][1] === "knight" &&
+      board[4][0] === "knight" &&
+      board[2][1] === "knight" &&
+      board[0][0] === "knight";
+
+    // Keep regenerating the board until all rules are satisfied
+  } while (
+    twoKnightsInRow6 ||
+    diagonalBishopFromKnight ||
+    bannedPlacement1 ||
+    bannedPlacement2 ||
+    bannedPlacement3 ||
+    bannedPlacement4 ||
+    bannedPlacement5 ||
+    bannedPlacement6
+  );
 
   return board;
 }
