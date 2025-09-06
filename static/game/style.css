@@ -128,3 +128,7 @@ body {
   color: var(--teal);
   text-shadow: 0 0 5vh var(--grey-700);
 }
+
+.square.finish-line {
+  border-bottom: 4px solid var(--teal);
+}

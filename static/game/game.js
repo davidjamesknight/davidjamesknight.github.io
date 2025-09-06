@@ -61,6 +61,7 @@ let board = setupBoard();
 let initialBoard = board.map((row) => [...row]); // deep copy for Try Again
 let selectedPiece = null;
 let highlightsEnabled = false; // New state variable
+let moveCount = 0;
 
 function renderBoard(board) {
   const boardDiv = document.getElementById("board");
@@ -74,6 +75,11 @@ function renderBoard(board) {
     const square = document.createElement("div");
     square.className = "square";
     square.textContent = piece ? pieceSymbols[piece] : "";
+
+    // Add the 'finish-line' class to the top row squares
+    if (row === 0) {
+      square.classList.add("finish-line");
+    }
 
     if (piece === "king") {
       square.classList.add("king");
@@ -97,6 +103,7 @@ function renderBoard(board) {
         if (valid) {
           board[emptyRow][emptyCol] = piece;
           board[row][col] = null;
+          moveCount++;
           renderBoard(board);
         }
       }
@@ -198,7 +205,7 @@ function checkWin() {
   for (let r = 0; r < 8; r++) {
     for (let c = 0; c < 2; c++) {
       if (board[r][c] === "king" && r === 0) {
-        showOverlay("You win! The King escaped!");
+        showOverlay(`You escaped in ${moveCount} moves!`);
         return;
       }
     }
@@ -208,6 +215,7 @@ function checkWin() {
 document.getElementById("try-again").addEventListener("click", () => {
   hideOverlay();
   board = initialBoard.map((row) => [...row]); // restore starting layout
+  moveCount = 0;
   renderBoard(board);
 });
 
@@ -215,6 +223,7 @@ document.getElementById("new-game").addEventListener("click", () => {
   hideOverlay();
   board = setupBoard(); // generate new board
   initialBoard = board.map((row) => [...row]); // save new initial layout
+  moveCount = 0;
   renderBoard(board);
 });
 
