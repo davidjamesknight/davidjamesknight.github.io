@@ -133,7 +133,7 @@ body {
 #finish-line {
   z-index: 5;
   position: absolute;
-  top: calc((100vh / 8) - 0.5vh);
+  top: calc((100vh / 8) - 0.25vh);
   background-color: var(--teal);
   height: 0.5vh;
   width: calc(2 * 12.5vh + 0.5vh);
