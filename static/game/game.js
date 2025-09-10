@@ -9,31 +9,22 @@ const pieceSymbols = {
 
 function setupBoard() {
   const piecesPool = [
-    "queen",
-    "queen",
-    "rook",
-    "rook",
-    "rook",
-    "rook",
-    "bishop",
-    "bishop",
-    "bishop",
-    "bishop",
-    "knight",
-    "knight",
-    "knight",
-    "knight",
+    ...Array(2).fill("queen"),
+    ...Array(4).fill("rook"),
+    ...Array(4).fill("bishop"),
+    ...Array(4).fill("knight"),
   ];
 
   let board;
-  let twoKnightsInRow6;
-  let diagonalBishopFromKnight;
+  let bannedPlacement0;
   let bannedPlacement1;
   let bannedPlacement2;
   let bannedPlacement3;
   let bannedPlacement4;
   let bannedPlacement5;
   let bannedPlacement6;
+  let bannedPlacement7;
+  let bannedPlacement8;
 
   do {
     // shuffle pieces
@@ -59,41 +50,35 @@ function setupBoard() {
       }
     }
 
-    // The variables are now being assigned values, not re-declared
-    twoKnightsInRow6 = board[6].filter((p) => p === "knight").length === 2;
+    // Check for placements that make the puzzle unsolvable
 
-    const knightAt6_0 = board[6][0] === "knight";
-    const knightAt6_1 = board[6][1] === "knight";
-    const bishopAt5_0 = board[5][0] === "bishop";
-    const bishopAt5_1 = board[5][1] === "bishop";
-
-    diagonalBishopFromKnight =
-      (knightAt6_0 && bishopAt5_1) || (knightAt6_1 && bishopAt5_0);
-
-    bannedPlacement1 =
-      board[6][0] === "knight" &&
-      board[4][1] === "knight" &&
-      board[3][0] === "bishop";
-    bannedPlacement2 =
-      board[6][1] === "knight" &&
-      board[4][0] === "knight" &&
-      board[3][1] === "bishop";
+    bannedPlacement0 = board[6][0] === "knight" && board[6][1] === "knight";
+    bannedPlacement1 = board[6][1] === "knight" && board[5][0] === "bishop";
+    bannedPlacement2 = board[6][0] === "knight" && board[5][1] === "bishop";
     bannedPlacement3 =
       board[6][0] === "knight" &&
       board[4][1] === "knight" &&
-      board[2][0] === "knight" &&
-      board[1][1] === "bishop";
+      board[3][0] === "bishop";
     bannedPlacement4 =
       board[6][1] === "knight" &&
       board[4][0] === "knight" &&
-      board[2][1] === "knight" &&
-      board[1][0] === "bishop";
+      board[3][1] === "bishop";
     bannedPlacement5 =
       board[6][0] === "knight" &&
       board[4][1] === "knight" &&
       board[2][0] === "knight" &&
-      board[0][1] === "knight";
+      board[1][1] === "bishop";
     bannedPlacement6 =
+      board[6][1] === "knight" &&
+      board[4][0] === "knight" &&
+      board[2][1] === "knight" &&
+      board[1][0] === "bishop";
+    bannedPlacement7 =
+      board[6][0] === "knight" &&
+      board[4][1] === "knight" &&
+      board[2][0] === "knight" &&
+      board[0][1] === "knight";
+    bannedPlacement8 =
       board[6][1] === "knight" &&
       board[4][0] === "knight" &&
       board[2][1] === "knight" &&
@@ -101,14 +86,15 @@ function setupBoard() {
 
     // Keep regenerating the board until all rules are satisfied
   } while (
-    twoKnightsInRow6 ||
-    diagonalBishopFromKnight ||
+    bannedPlacement0 ||
     bannedPlacement1 ||
     bannedPlacement2 ||
     bannedPlacement3 ||
     bannedPlacement4 ||
     bannedPlacement5 ||
-    bannedPlacement6
+    bannedPlacement6 ||
+    bannedPlacement7 ||
+    bannedPlacement8
   );
 
   return board;
@@ -253,7 +239,6 @@ function showOverlay(message) {
 
 function hideOverlay() {
   const overlay = document.getElementById("overlay");
-  console.log(overlay);
   if (!overlay.classList.contains("hidden")) {
     overlay.classList.add("hidden");
   }

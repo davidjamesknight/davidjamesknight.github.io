@@ -11,6 +11,7 @@
 
 body {
   font-family: "Arial", sans-serif;
+  font-weight: bold;
   background: var(--black);
   color: var(--white);
   display: flex;
@@ -49,9 +50,8 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-weight: bold;
   color: var(--white);
-  font-size: 10vh;
+  font-size: 10vh; /* was 10 */
   border-radius: 0px;
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.3s ease, color 0.5s ease,
