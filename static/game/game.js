@@ -103,60 +103,56 @@ function setupBoard() {
 // These variables must be outside the setupBoard function
 let board = setupBoard();
 let initialBoard = board.map((row) => [...row]); // deep copy for Try Again
-let selectedPiece = null;
-let highlightsEnabled = false; // New state variable
 let moveCount = 0;
 
 function renderBoard(board) {
-  const boardDiv = document.getElementById("board");
-  boardDiv.innerHTML = "";
   const [emptyRow, emptyCol] = findEmpty();
 
-  board.flat().forEach((piece, index) => {
-    const row = Math.floor(index / 2);
-    const col = index % 2;
+  // Iterate over the board data and update the corresponding HTML elements
+  for (let r = 0; r < 8; r++) {
+    for (let c = 0; c < 2; c++) {
+      const piece = board[r][c];
+      const square = document.getElementById(`sq-${r}-${c}`);
+      square.textContent = piece ? pieceSymbols[piece] : "";
 
-    const square = document.createElement("div");
-    square.className = "square";
-    square.textContent = piece ? pieceSymbols[piece] : "";
+      // Reset classes
+      square.className = "square";
+      if (r === 0) square.classList.add("finish-line");
+      if (piece === "king") square.classList.add("king");
 
-    // Add the 'finish-line' class to the top row squares
-    if (row === 0) {
-      square.classList.add("finish-line");
-    }
-
-    if (piece === "king") {
-      square.classList.add("king");
-    }
-
-    if (piece) {
-      const valid = canMove(piece, row, col, emptyRow, emptyCol);
-      if (valid) {
-        if (highlightsEnabled) {
-          square.classList.add("highlight");
-        }
-      } else {
-        square.classList.add("unmovable");
-      }
-    }
-
-    square.addEventListener("click", () => {
+      // Apply unmovable highlights
       if (piece) {
-        // If a piece is clicked
-        const valid = canMove(piece, row, col, emptyRow, emptyCol);
-        if (valid) {
-          board[emptyRow][emptyCol] = piece;
-          board[row][col] = null;
-          moveCount++;
-          renderBoard(board);
+        const valid = canMove(piece, r, c, emptyRow, emptyCol);
+        if (!valid) {
+          square.classList.add("unmovable");
         }
       }
-    });
-
-    boardDiv.appendChild(square);
-  });
+    }
+  }
 
   checkWin();
+}
+
+// Event listeners for each square (attached once)
+function setupEventListeners() {
+  for (let r = 0; r < 8; r++) {
+    for (let c = 0; c < 2; c++) {
+      const square = document.getElementById(`sq-${r}-${c}`);
+      square.addEventListener("click", () => {
+        const piece = board[r][c];
+        if (piece) {
+          const [emptyRow, emptyCol] = findEmpty();
+          const valid = canMove(piece, r, c, emptyRow, emptyCol);
+          if (valid) {
+            board[emptyRow][emptyCol] = piece;
+            board[r][c] = null;
+            moveCount++;
+            renderBoard(board);
+          }
+        }
+      });
+    }
+  }
 }
 
 function findEmpty() {
@@ -270,11 +266,7 @@ document.getElementById("new-game").addEventListener("click", () => {
   renderBoard(board);
 });
 
-document.getElementById("toggle-highlights").addEventListener("click", () => {
-  highlightsEnabled = !highlightsEnabled;
-  renderBoard(board);
-});
-
 // Initial draw
 hideOverlay();
+setupEventListeners(); // Call this once to set up listeners
 renderBoard(board);

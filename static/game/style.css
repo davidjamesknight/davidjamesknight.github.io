@@ -1,12 +1,15 @@
 :root {
   /* Material Design Color Palette Variables */
   --grey-900: #212121;
+  --grey-850: #323232;
   --grey-800: #424242;
   --grey-700: #616161;
   --grey-600: #757575;
+  --grey-500: #9e9e9e;
   --white: #ffffff;
   --black: #000000;
   --teal: #1de9b6;
+  --teal-A700: #00bfa5; /* New darker teal color for pulsing */
 }
 
 body {
@@ -20,6 +23,7 @@ body {
   justify-content: center;
   height: 100vh;
   margin: 0;
+  overflow: hidden; /* Prevent scrollbar from animation */
 }
 
 #game-container {
@@ -39,7 +43,6 @@ body {
   width: calc(2 * 12.5vh + 0.5vh);
   height: calc(100vh - 1vh);
   box-sizing: border-box;
-  /* border-top: 0.5vh solid var(--teal); */
 }
 
 .square {
@@ -51,17 +54,111 @@ body {
   justify-content: center;
   align-items: center;
   color: var(--white);
-  font-size: 10vh; /* was 10 */
+  font-size: 10vh;
   border-radius: 0px;
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.3s ease, color 0.5s ease,
     background 0.3s ease;
   text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000,
     1px 1px 0 #000, 0 0 5vh var(--grey-600);
+  position: relative;
+  /* Add the background animation to the squares */
+  animation: backgroundFlash 12s infinite ease-in-out;
+}
+
+/* This is the restored, always-on finish line */
+#finish-line {
+  z-index: 5;
+  position: absolute;
+  height: 0.5vh;
+  top: 0;
+  width: calc(2 * 12.5vh + 0.5vh);
+  /* Apply the pulsing animation for the background and box-shadow */
+  animation: pulse-teal-background 2s infinite alternate ease-in-out;
+}
+
+/* New start line at the bottom */
+#start-line {
+  /* This element is no longer needed in the HTML but keeping the CSS for context */
+  display: none;
+}
+
+/* The new keyframes animate the background color of the squares */
+@keyframes backgroundFlash {
+  0% {
+    background: var(--grey-900);
+  }
+  2.5% {
+    background: var(--grey-850);
+  }
+  5% {
+    background: var(--grey-900);
+  }
+  100% {
+    background: var(--grey-900);
+  }
+}
+
+/* Apply animation delays to each row from bottom to top */
+#sq-7-0,
+#sq-7-1 {
+  animation-delay: 0s;
+}
+
+#sq-6-0,
+#sq-6-1 {
+  animation-delay: 0.125s;
+}
+
+#sq-5-0,
+#sq-5-1 {
+  animation-delay: 0.25s;
+}
+
+#sq-4-0,
+#sq-4-1 {
+  animation-delay: 0.375s;
+}
+
+#sq-3-0,
+#sq-3-1 {
+  animation-delay: 0.5s;
+}
+
+#sq-2-0,
+#sq-2-1 {
+  animation-delay: 0.625s;
+}
+
+#sq-1-0,
+#sq-1-1 {
+  animation-delay: 0.75s;
+}
+
+/* Now, the top row is also included in the animation */
+#sq-0-0,
+#sq-0-1 {
+  animation-delay: 0.875s;
+}
+
+/* Animation for the finish line's background and glow */
+@keyframes pulse-teal-background {
+  0% {
+    background-color: var(--teal);
+    box-shadow: 0 5px 10px 0 var(--teal);
+  }
+  100% {
+    background-color: var(--teal-A700);
+    box-shadow: 0 5px 10px 0 var(--teal-A700);
+  }
+}
+
+.square.king {
+  color: var(--teal);
 }
 
 .square.highlight {
-  background: var(--grey-800);
+  background: var(--grey-850);
 }
 
 .square.unmovable {
@@ -124,17 +221,4 @@ body {
 
 #overlay.hidden {
   display: none !important;
-}
-
-.square.king {
-  color: var(--teal);
-}
-
-#finish-line {
-  z-index: 5;
-  position: absolute;
-  top: calc((100vh / 8) - 0.5vh);
-  background-color: var(--teal);
-  height: 0.5vh;
-  width: calc(2 * 12.5vh + 0.5vh);
 }
