@@ -9,7 +9,7 @@
   --white: #ffffff;
   --black: #000000;
   --teal: #1de9b6;
-  --teal-A700: #00bfa5; /* New darker teal color for pulsing */
+  --teal-A700: #00bfa5;
 }
 
 body {
@@ -57,33 +57,22 @@ body {
   font-size: 10vh;
   border-radius: 0px;
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.3s ease, color 0.5s ease,
-    background 0.3s ease;
+  transition: transform 0.2s ease, box-shadow 0.3s ease, background 0.3s ease;
   text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000,
     1px 1px 0 #000, 0 0 5vh var(--grey-600);
   position: relative;
-  /* Add the background animation to the squares */
   animation: backgroundFlash 12s infinite ease-in-out;
 }
 
-/* This is the restored, always-on finish line */
 #finish-line {
   z-index: 5;
   position: absolute;
   height: 0.5vh;
   top: 0;
   width: calc(2 * 12.5vh + 0.5vh);
-  /* Apply the pulsing animation for the background and box-shadow */
   animation: pulse-teal-background 2s infinite alternate ease-in-out;
 }
 
-/* New start line at the bottom */
-#start-line {
-  /* This element is no longer needed in the HTML but keeping the CSS for context */
-  display: none;
-}
-
-/* The new keyframes animate the background color of the squares */
 @keyframes backgroundFlash {
   0% {
     background: var(--grey-900);
@@ -135,13 +124,11 @@ body {
   animation-delay: 0.75s;
 }
 
-/* Now, the top row is also included in the animation */
 #sq-0-0,
 #sq-0-1 {
   animation-delay: 0.875s;
 }
 
-/* Animation for the finish line's background and glow */
 @keyframes pulse-teal-background {
   0% {
     background-color: var(--teal);
@@ -154,7 +141,7 @@ body {
 }
 
 .square.king {
-  color: var(--teal);
+  color: var(--teal) !important;
 }
 
 .square.highlight {
@@ -163,7 +150,6 @@ body {
 
 .square.unmovable {
   background: var(--grey-900);
-  color: var(--white);
 }
 
 #toggle-highlights {
