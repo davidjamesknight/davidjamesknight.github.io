@@ -11,26 +11,21 @@ const pieceSymbols = {
 const rulesOverlay = document.getElementById("rules-overlay");
 const rulesToggle = document.getElementById("rules-toggle");
 const closeRules = document.getElementById("close-rules");
+const rulesGotItBtn = document.getElementById("rules-got-it-btn");
 
-// Sidebar Control Buttons
-const startOverBtn = document.getElementById("start-over"); // ⟲
-const newGameBtnSidebar = document.getElementById("new-game-btn"); // ⟳
+const startOverBtn = document.getElementById("start-over");
+const newGameBtnSidebar = document.getElementById("new-game-btn");
 
-// Modal Buttons (Win Screen)
 const tryAgainBtn = document.getElementById("try-again");
 const newGameBtnModal = document.getElementById("new-game");
 
-const overlay = document.getElementById("overlay");
+const finishOverlay = document.getElementById("finish-overlay");
 const overlayMessage = document.getElementById("overlay-message");
 
-// --- Game State ---
 let board = [];
 let initialBoard = [];
 let moveCount = 0;
 
-/**
- * Generates a valid, solvable board layout.
- */
 function setupBoard() {
   const piecesPool = [
     ...Array(2).fill("queen"),
@@ -43,15 +38,11 @@ function setupBoard() {
   let isUnsolvable;
 
   do {
-    // Shuffle pieces
     const pieces = [...piecesPool].sort(() => Math.random() - 0.5);
     newBoard = Array.from({ length: 8 }, () => Array(2).fill(null));
-
-    // King fixed at bottom-left, empty square at bottom-right
     newBoard[7][0] = "king";
     newBoard[7][1] = null;
 
-    // Fill remaining 14 squares
     let idx = 0;
     for (let r = 0; r < 8; r++) {
       for (let c = 0; c < 2; c++) {
@@ -60,10 +51,7 @@ function setupBoard() {
       }
     }
 
-    // Helper to check piece at coordinates
     const b = (r, c) => newBoard[r][c];
-
-    // Check unsolvable configurations
     isUnsolvable =
       (b(6, 0) === "knight" && b(6, 1) === "knight") ||
       (b(6, 1) === "knight" && b(5, 0) === "bishop") ||
@@ -91,10 +79,6 @@ function setupBoard() {
   return newBoard;
 }
 
-/**
- * Resets or Starts a new game.
- * @param {boolean} isNewBoard - If true, generates a completely new layout.
- */
 function initGame(isNewBoard = true) {
   if (isNewBoard) {
     board = setupBoard();
@@ -102,30 +86,22 @@ function initGame(isNewBoard = true) {
   } else {
     board = initialBoard.map((row) => [...row]);
   }
-
   moveCount = 0;
-  hideOverlay();
+  finishOverlay.classList.add("hidden");
   renderBoard();
 }
 
 function renderBoard() {
-  const [emptyRow, emptyCol] = findEmpty();
-
+  const [er, ec] = findEmpty();
   for (let r = 0; r < 8; r++) {
     for (let c = 0; c < 2; c++) {
       const piece = board[r][c];
       const square = document.getElementById(`sq-${r}-${c}`);
-
       square.textContent = piece ? pieceSymbols[piece] : "";
-      square.className = "square"; // Clear existing classes
-
-      if (r === 0) square.classList.add("finish-line");
+      square.className = "square";
       if (piece === "king") square.classList.add("king");
-
-      // Visual aid: highlight pieces that cannot currently move
-      if (piece && !canMove(piece, r, c, emptyRow, emptyCol)) {
+      if (piece && !canMove(piece, r, c, er, ec))
         square.classList.add("unmovable");
-      }
     }
   }
   checkWin();
@@ -142,7 +118,6 @@ function findEmpty() {
 function canMove(piece, r, c, er, ec) {
   const dr = er - r;
   const dc = ec - c;
-
   let valid = false;
   switch (piece) {
     case "king":
@@ -163,16 +138,12 @@ function canMove(piece, r, c, er, ec) {
         (Math.abs(dr) === 1 && Math.abs(dc) === 2);
       break;
   }
-
   if (!valid) return false;
   if (piece === "knight" || piece === "king") return true;
-
-  // Path blocking check for sliding pieces
   const rStep = dr === 0 ? 0 : dr > 0 ? 1 : -1;
   const cStep = dc === 0 ? 0 : dc > 0 ? 1 : -1;
-  let currR = r + rStep;
-  let currC = c + cStep;
-
+  let currR = r + rStep,
+    currC = c + cStep;
   while (currR !== er || currC !== ec) {
     if (board[currR][currC]) return false;
     currR += rStep;
@@ -183,22 +154,11 @@ function canMove(piece, r, c, er, ec) {
 
 function checkWin() {
   if (board[0].includes("king")) {
-    showOverlay(`You escaped in ${moveCount} moves!`);
+    overlayMessage.textContent = `You escaped in ${moveCount} moves!`;
+    finishOverlay.classList.remove("hidden");
   }
 }
 
-function showOverlay(msg) {
-  overlayMessage.textContent = msg;
-  overlay.classList.remove("hidden");
-}
-
-function hideOverlay() {
-  overlay.classList.add("hidden");
-}
-
-// --- Event Listeners ---
-
-// 1. Board Clicks
 for (let r = 0; r < 8; r++) {
   for (let c = 0; c < 2; c++) {
     document.getElementById(`sq-${r}-${c}`).addEventListener("click", () => {
@@ -214,20 +174,19 @@ for (let r = 0; r < 8; r++) {
   }
 }
 
-// 2. Sidebar/UI Controls
+const closeRulesModal = () => rulesOverlay.classList.add("hidden");
 rulesToggle.addEventListener("click", () =>
   rulesOverlay.classList.remove("hidden")
 );
-closeRules.addEventListener("click", () =>
-  rulesOverlay.classList.add("hidden")
-);
+closeRules.addEventListener("click", closeRulesModal);
+rulesGotItBtn.addEventListener("click", closeRulesModal);
+rulesOverlay.addEventListener("click", (e) => {
+  if (e.target === rulesOverlay) closeRulesModal();
+});
 
-startOverBtn.addEventListener("click", () => initGame(false)); // Reset current
-newGameBtnSidebar.addEventListener("click", () => initGame(true)); // New layout
-
-// 3. Win Screen Modal Controls
+startOverBtn.addEventListener("click", () => initGame(false));
+newGameBtnSidebar.addEventListener("click", () => initGame(true));
 tryAgainBtn.addEventListener("click", () => initGame(false));
 newGameBtnModal.addEventListener("click", () => initGame(true));
 
-// --- Initialization ---
-initGame(true); // Generate board
+initGame(true);
