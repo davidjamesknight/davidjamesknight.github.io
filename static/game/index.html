@@ -7,6 +7,11 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
+    <div class="control-group-left">
+      <button id="new-game-btn" title="New Game">+</button>
+      <button id="start-over" title="Restart Level">⟲</button>
+    </div>
+    <button id="rules-toggle" title="How to Play">i</button>
     <div id="game-container">
       <div id="finish-line"></div>
       <div id="board">
@@ -28,11 +33,41 @@
         <div class="square" id="sq-7-1"></div>
       </div>
     </div>
-    <div id="overlay" class="hidden">
-      <div id="overlay-content">
+
+    <div id="overlay" class="overlay hidden">
+      <div class="overlay-content">
         <p id="overlay-message"></p>
         <button id="try-again">Try Again</button>
         <button id="new-game">New Game</button>
+      </div>
+    </div>
+
+    <div id="rules-overlay" class="overlay hidden">
+      <div class="overlay-content">
+        <button id="close-rules" class="close-btn">&times;</button>
+
+        <h2>How to Play</h2>
+        <ul style="text-align: left; font-size: 1.8vh; line-height: 1.6">
+          <li>
+            <strong>Goals:</strong>
+            <ul>
+              <li>
+                Get the
+                <span class="king">King (♔)</span>
+                to the top row.
+              </li>
+              <li>Use the fewest possible moves.</li>
+            </ul>
+          </li>
+          <li>
+            <strong>Movement:</strong>
+            <ul>
+              <li>Pieces cannot capture.</li>
+              <li>Click a piece to move it.</li>
+              <li>All movable pieces are highlighted.</li>
+            </ul>
+          </li>
+        </ul>
       </div>
     </div>
 

@@ -1,5 +1,4 @@
 :root {
-  /* Material Design Color Palette Variables */
   --grey-900: #212121;
   --grey-850: #323232;
   --grey-800: #424242;
@@ -12,9 +11,9 @@
   --teal-A700: #00bfa5;
 }
 
+/* --- Base & Layout --- */
 body {
   font-family: "Arial", sans-serif;
-  font-weight: bold;
   background: var(--black);
   color: var(--white);
   display: flex;
@@ -23,18 +22,15 @@ body {
   justify-content: center;
   height: 100vh;
   margin: 0;
-  overflow: hidden; /* Prevent scrollbar from animation */
+  overflow: hidden;
 }
 
-@supports (height: 100dvh) {
-  body {
-    height: 100dvh;
-  }
+strong {
+  font-weight: bold;
 }
 
 #game-container {
   display: flex;
-  flex-direction: row;
   align-items: center;
   justify-content: center;
   gap: 20px;
@@ -45,117 +41,92 @@ body {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: repeat(8, 1fr);
-  gap: 0.5dvh;
-  width: calc(2 * 12.5dvh + 0.5dvh);
-  height: calc(100dvh - 1dvh);
+  gap: 0.5vh;
+  width: calc(25vh + 0.5vh);
+  height: calc(100vh - 1vh);
   box-sizing: border-box;
 }
 
-@supports not (height: 100dvh) {
-  #board {
-    height: calc(100vh - 1vh);
-    width: calc(2 * 12.5vh + 0.5vh);
-    gap: 0.5vh;
-  }
-}
-
+/* --- Squares & Grid Logic --- */
 .square {
   width: 100%;
   height: 100%;
   background: var(--grey-900);
-  border: none;
   display: flex;
   justify-content: center;
   align-items: center;
   color: var(--white);
-  font-size: 10dvh;
-  border-radius: 0px;
+  font-size: 10vh;
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.3s ease, background 0.3s ease;
+  transition: transform 0.2s, box-shadow 0.3s, color 0.5s, background 0.3s;
   text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000,
-    1px 1px 0 #000, 0 0 5dvh var(--grey-600);
+    1px 1px 0 #000, 0 0 5vh var(--grey-600);
   position: relative;
   animation: backgroundFlash 12s infinite ease-in-out;
 }
 
-@supports not (height: 100dvh) {
-  .square {
-    font-size: 10vh;
-    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000,
-      1px 1px 0 #000, 0 0 5vh var(--grey-600);
-  }
+.king {
+  color: var(--teal);
+}
+.square.unmovable {
+  background: var(--grey-900);
+  color: var(--grey-700);
+  text-shadow: none;
 }
 
-#finish-line {
-  z-index: 5;
-  position: absolute;
-  height: 0.5dvh;
-  top: 0;
-  width: calc(2 * 12.5dvh + 0.5dvh);
-  animation: pulse-teal-background 2s infinite alternate ease-in-out;
+/* Row-based Animation Delays */
+#sq-7-0,
+#sq-7-1 {
+  animation-delay: 0s;
 }
-
-@supports not (height: 100dvh) {
-  #finish-line {
-    height: 0.5vh;
-    width: calc(2 * 12.5vh + 0.5vh);
-  }
+#sq-6-0,
+#sq-6-1 {
+  animation-delay: 0.125s;
+}
+#sq-5-0,
+#sq-5-1 {
+  animation-delay: 0.25s;
+}
+#sq-4-0,
+#sq-4-1 {
+  animation-delay: 0.375s;
+}
+#sq-3-0,
+#sq-3-1 {
+  animation-delay: 0.5s;
+}
+#sq-2-0,
+#sq-2-1 {
+  animation-delay: 0.625s;
+}
+#sq-1-0,
+#sq-1-1 {
+  animation-delay: 0.75s;
+}
+#sq-0-0,
+#sq-0-1 {
+  animation-delay: 0.875s;
 }
 
 @keyframes backgroundFlash {
-  0% {
+  0%,
+  5%,
+  100% {
     background: var(--grey-900);
   }
   2.5% {
     background: var(--grey-850);
   }
-  5% {
-    background: var(--grey-900);
-  }
-  100% {
-    background: var(--grey-900);
-  }
 }
 
-/* Apply animation delays to each row from bottom to top */
-#sq-7-0,
-#sq-7-1 {
-  animation-delay: 0s;
-}
-
-#sq-6-0,
-#sq-6-1 {
-  animation-delay: 0.125s;
-}
-
-#sq-5-0,
-#sq-5-1 {
-  animation-delay: 0.25s;
-}
-
-#sq-4-0,
-#sq-4-1 {
-  animation-delay: 0.375s;
-}
-
-#sq-3-0,
-#sq-3-1 {
-  animation-delay: 0.5s;
-}
-
-#sq-2-0,
-#sq-2-1 {
-  animation-delay: 0.625s;
-}
-
-#sq-1-0,
-#sq-1-1 {
-  animation-delay: 0.75s;
-}
-
-#sq-0-0,
-#sq-0-1 {
-  animation-delay: 0.875s;
+/* --- Finish Line --- */
+#finish-line {
+  z-index: 5;
+  position: absolute;
+  height: 0.5vh;
+  top: 0;
+  width: calc(25vh + 0.5vh);
+  animation: pulse-teal-background 2s infinite alternate ease-in-out;
 }
 
 @keyframes pulse-teal-background {
@@ -169,99 +140,119 @@ body {
   }
 }
 
-.square.king {
-  color: var(--teal) !important;
+/* --- UI Controls (Corner Navigation) --- */
+.control-group-left {
+  position: fixed;
+  top: 20px;
+  left: 10px;
+  display: flex;
+  flex-direction: column; /* Stack New Game on top of Restart */
+  gap: 5px; /* Minimal gap for a tight stack */
+  z-index: 100;
+  align-items: center;
 }
 
-.square.highlight {
-  background: var(--grey-850);
-}
-
-.square.unmovable {
-  background: var(--grey-900);
-}
-
-#toggle-highlights {
-  padding: 1.5dvh 3vw;
-  font-size: 2dvh;
+/* Universal Button Base */
+#start-over,
+#new-game-btn,
+#rules-toggle {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  color: var(--grey-800);
   cursor: pointer;
-  background: var(--teal);
+  transition: all 0.3s ease;
+  padding: 0;
   border: none;
-  border-radius: 5px;
-  color: var(--black);
-  transition: background 0.2s ease;
+  box-sizing: border-box;
+  line-height: 0;
 }
 
-@supports not (height: 100dvh) {
-  #toggle-highlights {
-    padding: 1.5vh 3vw;
-    font-size: 2vh;
-  }
+/* Frameless Icons */
+#start-over,
+#new-game-btn {
+  font-size: 42px;
 }
 
-#toggle-highlights:hover {
-  background: var(--teal);
+/* Circled Info Button - Fixed to Top Right */
+#rules-toggle {
+  position: fixed;
+  top: 20px;
+  right: 10px;
+  font-family: "Georgia", serif;
+  font-style: italic;
+  font-size: 36px;
 }
 
-#overlay {
+#start-over:hover,
+#new-game-btn:hover,
+#rules-toggle:hover {
+  color: var(--teal);
+  border-color: var(--teal);
+  transform: scale(1.1);
+}
+
+/* --- Overlays & Modals --- */
+.overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  height: 100dvh;
-  background: rgba(0, 0, 0, 0.75);
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 10;
+  z-index: 150;
 }
 
-@supports not (height: 100dvh) {
-  #overlay {
-    height: 100vh;
-  }
-}
-
-#overlay-content {
+.overlay-content {
+  position: relative;
   background: var(--grey-900);
-  padding: 5dvh 8vw;
+  padding: 4vh;
   border-radius: 10px;
+  border: 1px solid var(--grey-700);
   text-align: center;
+  max-width: 400px;
   color: var(--white);
-  font-size: 4dvh;
 }
 
-@supports not (height: 100dvh) {
-  #overlay-content {
-    padding: 5vh 8vw;
-    font-size: 4vh;
-  }
+.hidden {
+  display: none !important;
+}
+
+#close-rules {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  background: transparent;
+  border: none;
+  color: var(--grey-500);
+  font-size: 30px;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+#close-rules:hover {
+  color: var(--teal);
 }
 
 #overlay button {
-  margin: 2dvh 1vw 0 1vw;
-  padding: 1.5dvh 3vw;
-  font-size: 2dvh;
+  margin: 2vh 0.5vw 0 0.5vw;
+  padding: 1.5vh 3vw;
+  font-size: 2vh;
+  font-weight: bold;
   cursor: pointer;
   background: var(--teal);
   border: none;
   border-radius: 5px;
   color: var(--black);
-  transition: background 0.2s ease;
-}
-
-@supports not (height: 100dvh) {
-  #overlay button {
-    margin: 2vh 1vw 0 1vw;
-    padding: 1.5vh 3vw;
-    font-size: 2vh;
-  }
+  transition: opacity 0.2s ease;
 }
 
 #overlay button:hover {
-  background: var(--teal);
-}
-
-#overlay.hidden {
-  display: none !important;
+  opacity: 0.8;
 }

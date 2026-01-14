@@ -1,4 +1,4 @@
-// Unicode symbols for white chess pieces
+// --- Constants & Symbols ---
 const pieceSymbols = {
   king: "♔",
   queen: "♕",
@@ -7,6 +7,30 @@ const pieceSymbols = {
   knight: "♘",
 };
 
+// --- DOM Elements ---
+const rulesOverlay = document.getElementById("rules-overlay");
+const rulesToggle = document.getElementById("rules-toggle");
+const closeRules = document.getElementById("close-rules");
+
+// Sidebar Control Buttons
+const startOverBtn = document.getElementById("start-over"); // ⟲
+const newGameBtnSidebar = document.getElementById("new-game-btn"); // ⟳
+
+// Modal Buttons (Win Screen)
+const tryAgainBtn = document.getElementById("try-again");
+const newGameBtnModal = document.getElementById("new-game");
+
+const overlay = document.getElementById("overlay");
+const overlayMessage = document.getElementById("overlay-message");
+
+// --- Game State ---
+let board = [];
+let initialBoard = [];
+let moveCount = 0;
+
+/**
+ * Generates a valid, solvable board layout.
+ */
 function setupBoard() {
   const piecesPool = [
     ...Array(2).fill("queen"),
@@ -15,144 +39,96 @@ function setupBoard() {
     ...Array(4).fill("knight"),
   ];
 
-  let board;
-  let bannedPlacement0;
-  let bannedPlacement1;
-  let bannedPlacement2;
-  let bannedPlacement3;
-  let bannedPlacement4;
-  let bannedPlacement5;
-  let bannedPlacement6;
-  let bannedPlacement7;
-  let bannedPlacement8;
+  let newBoard;
+  let isUnsolvable;
 
   do {
-    // shuffle pieces
-    const pieces = [...piecesPool];
-    for (let i = pieces.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [pieces[i], pieces[j]] = [pieces[j], pieces[i]];
-    }
+    // Shuffle pieces
+    const pieces = [...piecesPool].sort(() => Math.random() - 0.5);
+    newBoard = Array.from({ length: 8 }, () => Array(2).fill(null));
 
-    // build empty 8x2 board
-    board = Array.from({ length: 8 }, () => Array(2).fill(null));
+    // King fixed at bottom-left, empty square at bottom-right
+    newBoard[7][0] = "king";
+    newBoard[7][1] = null;
 
-    // bottom row fixed
-    board[7][0] = "king"; // king bottom-left
-    board[7][1] = null; // empty bottom-right
-
-    // fill remaining 14 squares
+    // Fill remaining 14 squares
     let idx = 0;
     for (let r = 0; r < 8; r++) {
       for (let c = 0; c < 2; c++) {
-        if (r === 7 && (c === 0 || c === 1)) continue; // skip bottom row
-        board[r][c] = pieces[idx++];
+        if (r === 7) continue;
+        newBoard[r][c] = pieces[idx++];
       }
     }
 
-    // Check for placements that make the puzzle unsolvable
+    // Helper to check piece at coordinates
+    const b = (r, c) => newBoard[r][c];
 
-    bannedPlacement0 = board[6][0] === "knight" && board[6][1] === "knight";
-    bannedPlacement1 = board[6][1] === "knight" && board[5][0] === "bishop";
-    bannedPlacement2 = board[6][0] === "knight" && board[5][1] === "bishop";
-    bannedPlacement3 =
-      board[6][0] === "knight" &&
-      board[4][1] === "knight" &&
-      board[3][0] === "bishop";
-    bannedPlacement4 =
-      board[6][1] === "knight" &&
-      board[4][0] === "knight" &&
-      board[3][1] === "bishop";
-    bannedPlacement5 =
-      board[6][0] === "knight" &&
-      board[4][1] === "knight" &&
-      board[2][0] === "knight" &&
-      board[1][1] === "bishop";
-    bannedPlacement6 =
-      board[6][1] === "knight" &&
-      board[4][0] === "knight" &&
-      board[2][1] === "knight" &&
-      board[1][0] === "bishop";
-    bannedPlacement7 =
-      board[6][0] === "knight" &&
-      board[4][1] === "knight" &&
-      board[2][0] === "knight" &&
-      board[0][1] === "knight";
-    bannedPlacement8 =
-      board[6][1] === "knight" &&
-      board[4][0] === "knight" &&
-      board[2][1] === "knight" &&
-      board[0][0] === "knight";
+    // Check unsolvable configurations
+    isUnsolvable =
+      (b(6, 0) === "knight" && b(6, 1) === "knight") ||
+      (b(6, 1) === "knight" && b(5, 0) === "bishop") ||
+      (b(6, 0) === "knight" && b(5, 1) === "bishop") ||
+      (b(6, 0) === "knight" && b(4, 1) === "knight" && b(3, 0) === "bishop") ||
+      (b(6, 1) === "knight" && b(4, 0) === "knight" && b(3, 1) === "bishop") ||
+      (b(6, 0) === "knight" &&
+        b(4, 1) === "knight" &&
+        b(2, 0) === "knight" &&
+        b(1, 1) === "bishop") ||
+      (b(6, 1) === "knight" &&
+        b(4, 0) === "knight" &&
+        b(2, 1) === "knight" &&
+        b(1, 0) === "bishop") ||
+      (b(6, 0) === "knight" &&
+        b(4, 1) === "knight" &&
+        b(2, 0) === "knight" &&
+        b(0, 1) === "knight") ||
+      (b(6, 1) === "knight" &&
+        b(4, 0) === "knight" &&
+        b(2, 1) === "knight" &&
+        b(0, 0) === "knight");
+  } while (isUnsolvable);
 
-    // Keep regenerating the board until all rules are satisfied
-  } while (
-    bannedPlacement0 ||
-    bannedPlacement1 ||
-    bannedPlacement2 ||
-    bannedPlacement3 ||
-    bannedPlacement4 ||
-    bannedPlacement5 ||
-    bannedPlacement6 ||
-    bannedPlacement7 ||
-    bannedPlacement8
-  );
-
-  return board;
+  return newBoard;
 }
 
-// These variables must be outside the setupBoard function
-let board = setupBoard();
-let initialBoard = board.map((row) => [...row]); // deep copy for Try Again
-let moveCount = 0;
+/**
+ * Resets or Starts a new game.
+ * @param {boolean} isNewBoard - If true, generates a completely new layout.
+ */
+function initGame(isNewBoard = true) {
+  if (isNewBoard) {
+    board = setupBoard();
+    initialBoard = board.map((row) => [...row]);
+  } else {
+    board = initialBoard.map((row) => [...row]);
+  }
 
-function renderBoard(board) {
+  moveCount = 0;
+  hideOverlay();
+  renderBoard();
+}
+
+function renderBoard() {
   const [emptyRow, emptyCol] = findEmpty();
 
-  // Iterate over the board data and update the corresponding HTML elements
   for (let r = 0; r < 8; r++) {
     for (let c = 0; c < 2; c++) {
       const piece = board[r][c];
       const square = document.getElementById(`sq-${r}-${c}`);
-      square.textContent = piece ? pieceSymbols[piece] : "";
 
-      // Reset classes
-      square.className = "square";
+      square.textContent = piece ? pieceSymbols[piece] : "";
+      square.className = "square"; // Clear existing classes
+
       if (r === 0) square.classList.add("finish-line");
       if (piece === "king") square.classList.add("king");
 
-      // Apply unmovable highlights
-      if (piece) {
-        const valid = canMove(piece, r, c, emptyRow, emptyCol);
-        if (!valid) {
-          square.classList.add("unmovable");
-        }
+      // Visual aid: highlight pieces that cannot currently move
+      if (piece && !canMove(piece, r, c, emptyRow, emptyCol)) {
+        square.classList.add("unmovable");
       }
     }
   }
-
   checkWin();
-}
-
-// Event listeners for each square (attached once)
-function setupEventListeners() {
-  for (let r = 0; r < 8; r++) {
-    for (let c = 0; c < 2; c++) {
-      const square = document.getElementById(`sq-${r}-${c}`);
-      square.addEventListener("click", () => {
-        const piece = board[r][c];
-        if (piece) {
-          const [emptyRow, emptyCol] = findEmpty();
-          const valid = canMove(piece, r, c, emptyRow, emptyCol);
-          if (valid) {
-            board[emptyRow][emptyCol] = piece;
-            board[r][c] = null;
-            moveCount++;
-            renderBoard(board);
-          }
-        }
-      });
-    }
-  }
 }
 
 function findEmpty() {
@@ -167,106 +143,91 @@ function canMove(piece, r, c, er, ec) {
   const dr = er - r;
   const dc = ec - c;
 
-  // First, check if the move is a valid type for the piece.
-  let isValidMoveType = false;
+  let valid = false;
   switch (piece) {
     case "king":
-      isValidMoveType = Math.abs(dr) <= 1 && Math.abs(dc) <= 1;
+      valid = Math.abs(dr) <= 1 && Math.abs(dc) <= 1;
       break;
     case "queen":
-      isValidMoveType = dr === 0 || dc === 0 || Math.abs(dr) === Math.abs(dc);
+      valid = dr === 0 || dc === 0 || Math.abs(dr) === Math.abs(dc);
       break;
     case "rook":
-      isValidMoveType = dr === 0 || dc === 0;
+      valid = dr === 0 || dc === 0;
       break;
     case "bishop":
-      isValidMoveType = Math.abs(dr) === Math.abs(dc);
+      valid = Math.abs(dr) === Math.abs(dc);
       break;
     case "knight":
-      isValidMoveType =
+      valid =
         (Math.abs(dr) === 2 && Math.abs(dc) === 1) ||
         (Math.abs(dr) === 1 && Math.abs(dc) === 2);
       break;
   }
 
-  if (!isValidMoveType) {
-    return false;
-  }
+  if (!valid) return false;
+  if (piece === "knight" || piece === "king") return true;
 
-  // Knights and Kings don't need path checking.
-  if (piece === "knight" || piece === "king") {
-    return true;
-  }
+  // Path blocking check for sliding pieces
+  const rStep = dr === 0 ? 0 : dr > 0 ? 1 : -1;
+  const cStep = dc === 0 ? 0 : dc > 0 ? 1 : -1;
+  let currR = r + rStep;
+  let currC = c + cStep;
 
-  // Now, check for path blocking for Rook, Bishop, and Queen.
-  if (dr === 0) {
-    // Horizontal movement
-    const step = dc > 0 ? 1 : -1;
-    for (let i = c + step; i !== ec; i += step) {
-      if (board[r][i]) return false;
-    }
-  } else if (dc === 0) {
-    // Vertical movement
-    const step = dr > 0 ? 1 : -1;
-    for (let i = r + step; i !== er; i += step) {
-      if (board[i][c]) return false;
-    }
-  } else {
-    // Diagonal movement
-    const rStep = dr > 0 ? 1 : -1;
-    const cStep = dc > 0 ? 1 : -1;
-    let currR = r + rStep;
-    let currC = c + cStep;
-    while (currR !== er && currC !== ec) {
-      if (board[currR][currC]) return false;
-      currR += rStep;
-      currC += cStep;
-    }
+  while (currR !== er || currC !== ec) {
+    if (board[currR][currC]) return false;
+    currR += rStep;
+    currC += cStep;
   }
-
   return true;
 }
 
-function showOverlay(message) {
-  const overlay = document.getElementById("overlay");
-  document.getElementById("overlay-message").textContent = message;
+function checkWin() {
+  if (board[0].includes("king")) {
+    showOverlay(`You escaped in ${moveCount} moves!`);
+  }
+}
+
+function showOverlay(msg) {
+  overlayMessage.textContent = msg;
   overlay.classList.remove("hidden");
 }
 
 function hideOverlay() {
-  const overlay = document.getElementById("overlay");
-  if (!overlay.classList.contains("hidden")) {
-    overlay.classList.add("hidden");
-  }
+  overlay.classList.add("hidden");
 }
 
-function checkWin() {
-  for (let r = 0; r < 8; r++) {
-    for (let c = 0; c < 2; c++) {
-      if (board[r][c] === "king" && r === 0) {
-        showOverlay(`You escaped in ${moveCount} moves!`);
-        return;
+// --- Event Listeners ---
+
+// 1. Board Clicks
+for (let r = 0; r < 8; r++) {
+  for (let c = 0; c < 2; c++) {
+    document.getElementById(`sq-${r}-${c}`).addEventListener("click", () => {
+      const piece = board[r][c];
+      const [er, ec] = findEmpty();
+      if (piece && canMove(piece, r, c, er, ec)) {
+        board[er][ec] = piece;
+        board[r][c] = null;
+        moveCount++;
+        renderBoard();
       }
-    }
+    });
   }
 }
 
-document.getElementById("try-again").addEventListener("click", () => {
-  hideOverlay();
-  board = initialBoard.map((row) => [...row]); // restore starting layout
-  moveCount = 0;
-  renderBoard(board);
-});
+// 2. Sidebar/UI Controls
+rulesToggle.addEventListener("click", () =>
+  rulesOverlay.classList.remove("hidden")
+);
+closeRules.addEventListener("click", () =>
+  rulesOverlay.classList.add("hidden")
+);
 
-document.getElementById("new-game").addEventListener("click", () => {
-  hideOverlay();
-  board = setupBoard(); // generate new board
-  initialBoard = board.map((row) => [...row]); // save new initial layout
-  moveCount = 0;
-  renderBoard(board);
-});
+startOverBtn.addEventListener("click", () => initGame(false)); // Reset current
+newGameBtnSidebar.addEventListener("click", () => initGame(true)); // New layout
 
-// Initial draw
-hideOverlay();
-setupEventListeners(); // Call this once to set up listeners
-renderBoard(board);
+// 3. Win Screen Modal Controls
+tryAgainBtn.addEventListener("click", () => initGame(false));
+newGameBtnModal.addEventListener("click", () => initGame(true));
+
+// --- Initialization ---
+initGame(true); // Generate board
