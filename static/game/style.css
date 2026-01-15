@@ -4,7 +4,6 @@
   --grey-800: #424242;
   --grey-700: #616161;
   --grey-600: #757575;
-  --grey-500: #9e9e9e;
   --white: #ffffff;
   --black: #000000;
   --teal: #1de9b6;
@@ -14,14 +13,12 @@
 body {
   font-family: "Arial", sans-serif;
   background: var(--black);
-  color: var(--white);
   margin: 0;
   height: 100vh;
   width: 100vw;
   overflow: hidden;
 }
 
-/* --- Layout Container --- */
 #main-layout {
   display: flex;
   width: 100%;
@@ -29,21 +26,25 @@ body {
 }
 
 .side-column {
-  flex: 1; /* Takes up all available space flanking the board */
+  flex: 1;
   display: flex;
   flex-direction: column;
-  align-items: center; /* Horizontally centers content in the column */
-  justify-content: flex-start; /* Keeps icons near the top */
+  align-items: center;
   padding-top: 2vh;
 }
 
 #game-container {
-  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
-  width: calc(25vh + 0.5vh); /* Board width */
+  width: calc(25vh + 0.5vh);
   height: 100vh;
+}
+
+#board-wrapper {
+  position: relative;
+  width: 100%;
+  height: calc(100vh - 1vh);
 }
 
 #board {
@@ -52,13 +53,10 @@ body {
   grid-template-rows: repeat(8, 1fr);
   gap: 0.5vh;
   width: 100%;
-  height: calc(100vh - 1vh);
-  box-sizing: border-box;
+  height: 100%;
 }
 
 .square {
-  width: 100%;
-  height: 100%;
   background: var(--grey-900);
   display: flex;
   justify-content: center;
@@ -66,18 +64,16 @@ body {
   color: var(--white);
   font-size: 10vh;
   cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.3s, color 0.5s, background 0.3s;
-  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000,
-    1px 1px 0 #000, 0 0 5vh var(--grey-600);
-  position: relative;
+  text-shadow: 0 0 5vh var(--grey-600);
   animation: backgroundFlash 12s infinite ease-in-out;
+  transition: transform 0.2s, box-shadow 0.3s;
 }
 
 .king {
   color: var(--teal);
 }
+
 .square.unmovable {
-  background: var(--grey-900);
   color: var(--grey-700);
   text-shadow: none;
 }
@@ -157,40 +153,94 @@ body {
 
 #start-over,
 #new-game-btn,
-#rules-toggle {
+#rules-toggle,
+#settings-toggle {
   width: 8vh;
   height: 8vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   background: transparent;
   color: var(--grey-800);
-  cursor: pointer;
   border: none;
-  line-height: 0;
-  padding: 0;
-  transition: all 0.3s ease;
+  cursor: pointer;
+  transition: transform 0.15s ease, color 0.15s ease;
+}
+
+#start-over:active,
+#new-game-btn:active,
+#rules-toggle:active,
+#settings-toggle:active {
+  color: var(--teal);
+  transform: scale(0.9);
 }
 
 #start-over,
 #new-game-btn {
   font-size: 6vh;
 }
-
 #rules-toggle {
   font-family: "Georgia", serif;
   font-style: italic;
   font-size: 5vh;
 }
-
-#start-over:hover,
-#new-game-btn:hover,
-#rules-toggle:hover {
-  color: var(--teal);
-  transform: scale(1.1);
+#settings-toggle {
+  font-size: 5vh;
 }
 
-/* --- Overlays & Modals --- */
+/* --- Settings Switch --- */
+.settings-list {
+  margin: 3vh 0;
+  text-align: left;
+}
+.setting-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 2.5vh;
+}
+.setting-description {
+  font-size: 1.8vh;
+  color: var(--grey-600);
+  margin-top: 0.5vh;
+}
+.switch {
+  position: relative;
+  width: 6vh;
+  height: 3.4vh;
+}
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--grey-800);
+  transition: 0.4s;
+  border-radius: 3.4vh;
+}
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 2.6vh;
+  width: 2.6vh;
+  left: 0.4vh;
+  bottom: 0.4vh;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+input:checked + .slider {
+  background-color: var(--teal);
+}
+input:checked + .slider:before {
+  transform: translateX(2.6vh);
+}
+
+/* --- Overlays --- */
 .overlay {
   position: fixed;
   top: 0;
@@ -203,7 +253,6 @@ body {
   align-items: center;
   z-index: 150;
 }
-
 .overlay-content {
   position: relative;
   background: var(--grey-900);
@@ -214,21 +263,8 @@ body {
   max-width: 80vw;
   color: var(--white);
 }
-
 .hidden {
   display: none !important;
-}
-
-#close-rules {
-  position: absolute;
-  top: 1vh;
-  right: 1.5vw;
-  background: transparent;
-  border: none;
-  color: var(--grey-500);
-  font-size: 5vh;
-  cursor: pointer;
-  line-height: 1;
 }
 
 button {
@@ -241,7 +277,6 @@ button {
   border-radius: 1vh;
   color: var(--black);
 }
-
 .overlay-text {
   text-align: left;
   font-size: 2vh;

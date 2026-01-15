@@ -1,4 +1,3 @@
-// --- Constants & Symbols ---
 const pieceSymbols = {
   king: "♔",
   queen: "♕",
@@ -7,25 +6,63 @@ const pieceSymbols = {
   knight: "♘",
 };
 
-// --- DOM Elements ---
-const rulesOverlay = document.getElementById("rules-overlay");
-const rulesToggle = document.getElementById("rules-toggle");
-const closeRules = document.getElementById("close-rules");
-const rulesGotItBtn = document.getElementById("rules-got-it-btn");
-
-const startOverBtn = document.getElementById("start-over");
-const newGameBtnSidebar = document.getElementById("new-game-btn");
-
-const tryAgainBtn = document.getElementById("try-again");
-const newGameBtnModal = document.getElementById("new-game");
-
+const settingsOverlay = document.getElementById("settings-overlay");
+const tutorialModeCheck = document.getElementById("tutorial-mode-check");
 const finishOverlay = document.getElementById("finish-overlay");
-const overlayMessage = document.getElementById("overlay-message");
 
 let board = [];
 let initialBoard = [];
 let moveCount = 0;
 
+// Persist Tutorial Mode settings
+let tutorialMode = localStorage.getItem("tutorialMode") === "true";
+tutorialModeCheck.checked = tutorialMode;
+
+function renderBoard() {
+  const [er, ec] = findEmpty();
+  for (let r = 0; r < 8; r++) {
+    for (let c = 0; c < 2; c++) {
+      const piece = board[r][c];
+      const square = document.getElementById(`sq-${r}-${c}`);
+      square.textContent = piece ? pieceSymbols[piece] : "";
+      square.className = "square";
+      if (piece === "king") square.classList.add("king");
+
+      if (tutorialMode && piece && !canMove(piece, r, c, er, ec)) {
+        square.classList.add("unmovable");
+      }
+    }
+  }
+  checkWin();
+}
+
+tutorialModeCheck.addEventListener("change", (e) => {
+  tutorialMode = e.target.checked;
+  localStorage.setItem("tutorialMode", tutorialMode);
+  renderBoard();
+});
+
+// Modal Logic
+const toggleModal = (id, show) =>
+  document.getElementById(id).classList.toggle("hidden", !show);
+
+document
+  .getElementById("settings-toggle")
+  .addEventListener("click", () => toggleModal("settings-overlay", true));
+
+document
+  .getElementById("settings-done-btn")
+  .addEventListener("click", () => toggleModal("settings-overlay", false));
+
+document
+  .getElementById("rules-toggle")
+  .addEventListener("click", () => toggleModal("rules-overlay", true));
+
+document
+  .getElementById("rules-got-it-btn")
+  .addEventListener("click", () => toggleModal("rules-overlay", false));
+
+// Game Logic
 function setupBoard() {
   const piecesPool = [
     ...Array(2).fill("queen"),
@@ -33,16 +70,12 @@ function setupBoard() {
     ...Array(4).fill("bishop"),
     ...Array(4).fill("knight"),
   ];
-
-  let newBoard;
-  let isUnsolvable;
-
+  let newBoard, isUnsolvable;
   do {
     const pieces = [...piecesPool].sort(() => Math.random() - 0.5);
     newBoard = Array.from({ length: 8 }, () => Array(2).fill(null));
     newBoard[7][0] = "king";
     newBoard[7][1] = null;
-
     let idx = 0;
     for (let r = 0; r < 8; r++) {
       for (let c = 0; c < 2; c++) {
@@ -50,7 +83,6 @@ function setupBoard() {
         newBoard[r][c] = pieces[idx++];
       }
     }
-
     const b = (r, c) => newBoard[r][c];
     isUnsolvable =
       (b(6, 0) === "knight" && b(6, 1) === "knight") ||
@@ -75,7 +107,6 @@ function setupBoard() {
         b(2, 1) === "knight" &&
         b(0, 0) === "knight");
   } while (isUnsolvable);
-
   return newBoard;
 }
 
@@ -91,22 +122,6 @@ function initGame(isNewBoard = true) {
   renderBoard();
 }
 
-function renderBoard() {
-  const [er, ec] = findEmpty();
-  for (let r = 0; r < 8; r++) {
-    for (let c = 0; c < 2; c++) {
-      const piece = board[r][c];
-      const square = document.getElementById(`sq-${r}-${c}`);
-      square.textContent = piece ? pieceSymbols[piece] : "";
-      square.className = "square";
-      if (piece === "king") square.classList.add("king");
-      if (piece && !canMove(piece, r, c, er, ec))
-        square.classList.add("unmovable");
-    }
-  }
-  checkWin();
-}
-
 function findEmpty() {
   for (let r = 0; r < 8; r++) {
     for (let c = 0; c < 2; c++) {
@@ -116,8 +131,8 @@ function findEmpty() {
 }
 
 function canMove(piece, r, c, er, ec) {
-  const dr = er - r;
-  const dc = ec - c;
+  const dr = er - r,
+    dc = ec - c;
   let valid = false;
   switch (piece) {
     case "king":
@@ -140,8 +155,8 @@ function canMove(piece, r, c, er, ec) {
   }
   if (!valid) return false;
   if (piece === "knight" || piece === "king") return true;
-  const rStep = dr === 0 ? 0 : dr > 0 ? 1 : -1;
-  const cStep = dc === 0 ? 0 : dc > 0 ? 1 : -1;
+  const rStep = dr === 0 ? 0 : dr > 0 ? 1 : -1,
+    cStep = dc === 0 ? 0 : dc > 0 ? 1 : -1;
   let currR = r + rStep,
     currC = c + cStep;
   while (currR !== er || currC !== ec) {
@@ -154,7 +169,9 @@ function canMove(piece, r, c, er, ec) {
 
 function checkWin() {
   if (board[0].includes("king")) {
-    overlayMessage.textContent = `You escaped in ${moveCount} moves!`;
+    document.getElementById(
+      "overlay-message"
+    ).textContent = `You escaped in ${moveCount} moves!`;
     finishOverlay.classList.remove("hidden");
   }
 }
@@ -162,8 +179,8 @@ function checkWin() {
 for (let r = 0; r < 8; r++) {
   for (let c = 0; c < 2; c++) {
     document.getElementById(`sq-${r}-${c}`).addEventListener("click", () => {
-      const piece = board[r][c];
-      const [er, ec] = findEmpty();
+      const piece = board[r][c],
+        [er, ec] = findEmpty();
       if (piece && canMove(piece, r, c, er, ec)) {
         board[er][ec] = piece;
         board[r][c] = null;
@@ -174,19 +191,17 @@ for (let r = 0; r < 8; r++) {
   }
 }
 
-const closeRulesModal = () => rulesOverlay.classList.add("hidden");
-rulesToggle.addEventListener("click", () =>
-  rulesOverlay.classList.remove("hidden")
-);
-closeRules.addEventListener("click", closeRulesModal);
-rulesGotItBtn.addEventListener("click", closeRulesModal);
-rulesOverlay.addEventListener("click", (e) => {
-  if (e.target === rulesOverlay) closeRulesModal();
-});
-
-startOverBtn.addEventListener("click", () => initGame(false));
-newGameBtnSidebar.addEventListener("click", () => initGame(true));
-tryAgainBtn.addEventListener("click", () => initGame(false));
-newGameBtnModal.addEventListener("click", () => initGame(true));
+document
+  .getElementById("start-over")
+  .addEventListener("click", () => initGame(false));
+document
+  .getElementById("new-game-btn")
+  .addEventListener("click", () => initGame(true));
+document
+  .getElementById("try-again")
+  .addEventListener("click", () => initGame(false));
+document
+  .getElementById("new-game")
+  .addEventListener("click", () => initGame(true));
 
 initGame(true);
