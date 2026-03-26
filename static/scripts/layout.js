@@ -1,50 +1,47 @@
-// Dynamic width sizing ------------------------------
-function setOptimalColumnWidth(charPerLine = 65) {
-  const optimizedElements = document.getElementsByClassName("optimal-width");
-  const mainElement = document.querySelector("main");
-  // const formContainer = document.getElementById("form-container");
-  // Get computed styles of the main element
-  const mainStyles = getComputedStyle(mainElement);
-  const fontFamily = mainStyles.fontFamily;
-  const fontSize = parseFloat(mainStyles.fontSize);
+function fitHeroText() {
+  const hero = document.getElementById("hero-heading");
+  const container = document.querySelector("#hero .container");
 
-  // Create a temporary span to measure character width
-  const testElement = document.createElement("span");
-  testElement.style.position = "absolute";
-  testElement.style.visibility = "hidden";
-  testElement.style.whiteSpace = "nowrap";
-  testElement.style.fontFamily = fontFamily;
-  testElement.style.fontSize = `${fontSize}px`;
-  testElement.textContent =
-    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  if (!hero || !container || window.innerWidth <= 800) {
+    if (hero) hero.style.fontSize = "";
+    return;
+  }
 
-  document.body.appendChild(testElement);
+  // Calculate based on the 1100px max-width container
+  hero.style.fontSize = "100px";
+  hero.style.display = "inline-block";
 
-  // Calculate average character width
-  const avgCharWidth = testElement.offsetWidth / testElement.textContent.length;
+  const textWidth = hero.offsetWidth;
+  const availableWidth = container.offsetWidth;
 
-  // Remove test element
-  document.body.removeChild(testElement);
+  // Use a slightly smaller multiplier for single column breathing room
+  const finalSize = (availableWidth / textWidth) * 100 * 0.95;
 
-  // Calculate optimal column width
-  const maxWidth = Math.round(avgCharWidth * charPerLine);
-
-  [...optimizedElements].forEach((element) => {
-    element.style.maxWidth = `${maxWidth}px`;
-    element.style.margin = "0 auto";
-  });
+  hero.style.fontSize = `${finalSize}px`;
+  hero.style.display = "block";
 }
 
-function centerCallToAction() {
-  const logoHeight = document
-    .getElementById("logo")
-    .getBoundingClientRect().height;
-  const main = document.getElementById("main");
-  main.style.marginTop = `-${logoHeight}px`;
+window.addEventListener("resize", fitHeroText);
+document.addEventListener("DOMContentLoaded", fitHeroText);
+
+// Function to focus the contact form name field
+function setupCtaFocus() {
+  const cta = document.getElementById("hero-cta");
+  const nameField = document.getElementById("name");
+
+  if (cta && nameField) {
+    cta.addEventListener("click", (e) => {
+      // Allow the smooth scroll anchor to work, then focus
+      setTimeout(() => {
+        nameField.focus();
+      }, 800); // Slight delay to wait for scroll progress
+    });
+  }
 }
 
-// Run function on page load
+// Keep your existing fitHeroText logic here if needed
+// ...
+
 document.addEventListener("DOMContentLoaded", () => {
-  setOptimalColumnWidth();
-  centerCallToAction();
+  setupCtaFocus();
 });
