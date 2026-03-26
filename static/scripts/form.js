@@ -69,7 +69,6 @@ form.addEventListener("submit", async (event) => {
   const endpoint = atob(
     "aHR0cHM6Ly9zY3JpcHQuZ29vZ2xlLmNvbS9tYWNyb3Mvcy9BS2Z5Y2J4UDYxWlE5ZGcycDNVZGlGNmtiMnVrZThXZkdwdUZVdVBjaTFXWmJ6elZRTFIyVUstTE50SlZVSW1KTjk5NkJGcEQvZXhlYw==",
   );
-  // https://script.google.com/macros/s/AKfycbxP61ZQ9dg2p3UdiF6kb2uke8WfGpuFUuPci1WZbzzVQLR2UK-LNtJVUImJN996BFpD/exec
 
   try {
     // 4. Execute Request
