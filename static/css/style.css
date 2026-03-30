@@ -385,8 +385,20 @@ em {
     padding: 12rem 0;
   }
 
+  #hero h2 {
+    font-size: 2.5rem;
+  }
+
+  #hero p {
+    font-size: 1.25rem;
+  }
+
   #trademark-definition {
     padding: 6rem 0;
+  }
+
+  #trademark-definition h2 {
+    font-size: 2rem;
   }
 
   /* Services stacking fix */
@@ -408,6 +420,11 @@ em {
     gap: 3rem;
   }
 
+  .about-text h2 {
+    font-size: 2rem;
+    text-align: center;
+  }
+
   #profile-pic {
     position: static;
     margin: 0 auto; /* Centers the image itself */
@@ -417,12 +434,6 @@ em {
     width: 100%;
   }
 
-  /* Center only the button inside the about text */
-  #mailto {
-    display: flex;
-    margin: 2rem auto 0 auto;
-  }
-
   .section-header {
     margin-bottom: 3rem;
     padding: 0 1rem;
@@ -430,5 +441,10 @@ em {
 
   .section-title {
     font-size: 2rem;
+  }
+
+  #contact h2 {
+    font-size: 2rem;
+    line-height: 2rem;
   }
 }
