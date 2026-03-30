@@ -163,8 +163,13 @@ button[type="submit"]:hover {
 
 /* SERVICES SECTION --------------------------------------------------- */
 #services {
-  padding: 5rem 0 10rem 0;
-  background-color: var(--black);
+  padding: 8rem 0;
+  background-image:
+    linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+    url("../images/chessboard.jpg");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
   position: relative;
   z-index: 5;
 }
@@ -172,20 +177,21 @@ button[type="submit"]:hover {
 #services-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 2.5rem;
+  gap: 3rem;
+  align-items: start;
 }
 
 /* SECTION HEADER STYLING */
 .section-header {
   text-align: center;
-  margin-bottom: 4.5rem; /* Generous breathing room above the grid */
+  margin-bottom: 4.5rem;
 }
 
 .section-subtitle {
   font-family: var(--font-heading);
   font-size: 0.85rem;
   text-transform: uppercase;
-  letter-spacing: 0.25em; /* Wide tracking for a premium feel */
+  letter-spacing: 0.25em;
   color: var(--grey-400);
   margin-bottom: 0.75rem;
   display: block;
@@ -197,20 +203,79 @@ button[type="submit"]:hover {
   color: var(--white);
   line-height: 1.1;
   font-weight: 400;
-  max-width: 800px; /* Prevents the line from getting too long on desktop */
+  max-width: 800px;
   margin: 0 auto;
 }
 
-/* RESPONSIVE TWEAKS */
-@media (max-width: 768px) {
-  .section-header {
-    margin-bottom: 3rem;
-    padding: 0 1rem;
-  }
+.stage-header {
+  font-family: var(--font-heading);
+  font-size: 1.8rem;
+  color: var(--white);
+  margin-bottom: 2rem;
+  border-left: 3px solid var(--grey-800);
+  padding-left: 1rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
 
-  .section-title {
-    font-size: 2rem;
-  }
+/* SERVICE CONTENT NARRATIVE */
+.service-content {
+  background-color: rgba(8, 8, 8, 0.88);
+  padding: 2.2rem;
+  border: 1px solid var(--grey-900);
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.service-content p {
+  font-size: 1.05rem;
+  color: var(--grey-200);
+  line-height: 1.7;
+  margin-bottom: 0;
+}
+
+/* TOGGLE STYLING */
+details {
+  margin-top: 1.2rem;
+}
+
+summary {
+  list-style: none;
+  display: inline-block;
+  font-family: var(--font-heading);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--white);
+  cursor: pointer;
+  border-bottom: 1px solid var(--grey-800);
+  padding-bottom: 4px;
+  transition: all 0.2s ease;
+}
+
+summary:hover {
+  border-color: var(--white);
+  color: var(--grey-200);
+}
+
+summary::-webkit-details-marker {
+  display: none;
+}
+
+.details-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+details[open] summary {
+  display: none;
+}
+
+abbr[title] {
+  text-decoration: none;
+  cursor: help;
+  border-bottom: 1px dashed var(--grey-700);
 }
 
 /* ABOUT SECTION ------------------------------------------------------ */
@@ -319,119 +384,51 @@ em {
     height: auto;
     padding: 12rem 0;
   }
+
+  #trademark-definition {
+    padding: 6rem 0;
+  }
+
+  /* Services stacking fix */
+  #services-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  /* About section alignment fix */
   #about {
     background: var(--black) !important;
     padding: 6rem 0;
   }
-  #profile-pic {
-    position: static;
-  }
+
   .about-flex {
     flex-direction: column;
-    text-align: center;
+    align-items: center; /* Centers the profile pic container */
+    text-align: left; /* Keeps paragraph text left-aligned */
+    gap: 3rem;
   }
-  #services-grid {
-    grid-template-columns: 1fr;
+
+  #profile-pic {
+    position: static;
+    margin: 0 auto; /* Centers the image itself */
   }
-  #trademark-definition {
-    padding: 6rem 0;
+
+  .about-text {
+    width: 100%;
   }
-}
 
-/* SERVICES SECTION --------------------------------------------------- */
-#services {
-  padding: 8rem 0;
-  background-image:
-    linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
-    url("../images/chessboard.jpg");
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
-  position: relative;
-  z-index: 5;
-}
+  /* Center only the button inside the about text */
+  #mailto {
+    display: flex;
+    margin: 2rem auto 0 auto;
+  }
 
-#services-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 3rem;
-  align-items: start;
-}
+  .section-header {
+    margin-bottom: 3rem;
+    padding: 0 1rem;
+  }
 
-.stage-header {
-  font-family: var(--font-heading);
-  font-size: 1.8rem;
-  color: var(--white);
-  margin-bottom: 2rem;
-  border-left: 3px solid var(--grey-800);
-  padding-left: 1rem;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-}
-
-/* SERVICE CONTENT NARRATIVE */
-.service-content {
-  background-color: rgba(8, 8, 8, 0.88);
-  padding: 2.2rem;
-  border: 1px solid var(--grey-900);
-  border-radius: 8px;
-  transition: all 0.3s ease;
-}
-
-.service-content p {
-  font-size: 1.05rem;
-  color: var(--grey-200);
-  line-height: 1.7;
-  margin-bottom: 0; /* Managed by details spacing */
-}
-
-/* TOGGLE STYLING */
-details {
-  margin-top: 1.2rem;
-}
-
-summary {
-  list-style: none; /* Removes default arrow */
-  display: inline-block;
-  font-family: var(--font-heading);
-  font-size: 0.8rem;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  color: var(--white);
-  cursor: pointer;
-  border-bottom: 1px solid var(--grey-800);
-  padding-bottom: 4px;
-  transition: all 0.2s ease;
-}
-
-summary:hover {
-  border-color: var(--white);
-  color: var(--grey-200);
-}
-
-/* Removes Safari default arrow */
-summary::-webkit-details-marker {
-  display: none;
-}
-
-.details-inner {
-  /* padding-top: 1.5rem; */
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem; /* Space between the hidden paragraphs */
-}
-
-/* Visual state change when open */
-details[open] summary {
-  display: none;
-}
-
-/* details[open] summary::after {
-  content: " (Less)";
-} */
-
-abbr[title] {
-  text-decoration: none; /* Removes the dots */
-  cursor: help; /* Changes cursor to a question mark/pointer on hover */
-  border-bottom: 1px dashed var(--grey-700); /* Optional: a very faint indicator */
+  .section-title {
+    font-size: 2rem;
+  }
 }
