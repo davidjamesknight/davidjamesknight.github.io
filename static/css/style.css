@@ -4,6 +4,7 @@
   --black: #000000;
   --white: #fafafa;
   --grey-200: #cfd8dc;
+  --grey-400: #78909c; /* Added for subtitle consistency */
   --grey-700: #455a64;
   --grey-800: #37474f;
   --grey-900: #263238;
@@ -42,6 +43,7 @@ body {
   font-family: "Cinzel", serif;
   position: relative;
   display: inline-block;
+  margin-bottom: 2rem; /* Added spacing below the logo in the hero */
 }
 
 .letter {
@@ -129,6 +131,7 @@ button[type="submit"]:hover {
   padding: 5rem 0;
   background-color: var(--black);
   border-top: 1px solid var(--grey-900);
+  border-bottom: 1px solid var(--grey-900);
 }
 
 .definition-content {
@@ -165,7 +168,7 @@ button[type="submit"]:hover {
 #services {
   padding: 8rem 0;
   background-image:
-    linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+    linear-gradient(rgba(0, 0, 0, 0.666), rgba(0, 0, 0, 0.666)),
     url("../images/chessboard.jpg");
   background-size: cover;
   background-position: center;
@@ -331,6 +334,12 @@ em {
   padding: 10rem 0;
   text-align: center;
   background-color: var(--black);
+  background-image:
+    linear-gradient(rgba(0, 0, 0, 0.666), rgba(0, 0, 0, 0.666)),
+    url("../images/chessboard.jpg");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
   position: relative;
   z-index: 5;
 }
@@ -339,6 +348,13 @@ em {
   font-family: var(--font-heading);
   font-size: 3.2rem;
   margin-bottom: 1.5rem;
+}
+
+#contact p {
+  max-width: 850px;
+  margin: 0 auto 3rem auto;
+  font-size: 1.25rem;
+  color: var(--grey-200);
 }
 
 #contact-form {
@@ -368,6 +384,10 @@ em {
 }
 
 /* FOOTER ------------------------------------------------------------- */
+
+footer {
+  border-top: 1px solid var(--grey-900);
+}
 #site-credits {
   padding: 5rem 0;
   text-align: center;
@@ -415,8 +435,8 @@ em {
 
   .about-flex {
     flex-direction: column;
-    align-items: center; /* Centers the profile pic container */
-    text-align: left; /* Keeps paragraph text left-aligned */
+    align-items: center;
+    text-align: left;
     gap: 3rem;
   }
 
@@ -427,7 +447,7 @@ em {
 
   #profile-pic {
     position: static;
-    margin: 0 auto; /* Centers the image itself */
+    margin: 0 auto;
   }
 
   .about-text {
