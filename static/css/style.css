@@ -1,3 +1,11 @@
+@font-face {
+  font-family: "Cinzel";
+  src: url("../static/fonts/Cinzel/Cinzel-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --font-heading: "CrimsonText-SemiBold", "Times New Roman", serif;
   --font-text: "CrimsonText", "Times New Roman", serif;
