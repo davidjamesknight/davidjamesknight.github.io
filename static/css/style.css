@@ -1,7 +1,23 @@
 @font-face {
   font-family: "Cinzel";
-  src: url("../static/fonts/Cinzel/Cinzel-Regular.ttf") format("truetype");
+  src: url("../fonts/Cinzel/Cinzel-Regular.ttf") format("truetype");
   font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "CrimsonText";
+  src: url("../fonts/Crimson_Text/CrimsonText-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "CrimsonText-SemiBold";
+  src: url("../fonts/Crimson_Text/CrimsonText-SemiBold.ttf") format("truetype");
+  font-weight: 600;
   font-style: normal;
   font-display: swap;
 }
